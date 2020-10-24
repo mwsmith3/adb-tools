@@ -1,7 +1,7 @@
-package org.jetbrains.plugins.template.services
+package com.github.mwsmith3.adbtools.services
 
 import com.intellij.openapi.project.Project
-import org.jetbrains.plugins.template.MyBundle
+import com.github.mwsmith3.adbtools.MyBundle
 
 class MyProjectService(project: Project) {
 

@@ -1,4 +1,4 @@
-package org.jetbrains.plugins.template
+package com.github.mwsmith3.adbtools
 
 import com.intellij.AbstractBundle
 import org.jetbrains.annotations.NonNls
