@@ -22,4 +22,15 @@
         <listener class="com.github.mwsmith3.adbtools.listeners.ProjectListener"
                   topic="com.intellij.openapi.project.ProjectManagerListener"/>
     </projectListeners>
+
+    <actions>
+        <group id="com.github.mwsmith3.adbtools.ADBActions" text="ADB ToolWindow Actions">
+            <action id="com.github.mwsmith3.adbtools.actions.TalkbackAction"
+                    class="com.github.mwsmith3.adbtools.actions.TalkbackAction" text="TalkBack Action"
+                    description="Toggles TalkBack on a Android device"
+                    icon="NetIcons.Common.MessageInfo(Gray)">
+            </action>
+        </group>
+
+    </actions>
 </idea-plugin>
