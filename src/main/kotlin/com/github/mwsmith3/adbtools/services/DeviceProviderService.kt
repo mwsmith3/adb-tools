@@ -3,6 +3,7 @@ package com.github.mwsmith3.adbtools.services
 import com.android.ddmlib.AndroidDebugBridge
 import com.android.ddmlib.IDevice
 import com.github.mwsmith3.adbtools.ui.AdbToolWindow
+import com.github.mwsmith3.adbtools.ui.AdbToolWindowPanel
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.project.Project
@@ -11,7 +12,7 @@ import com.intellij.ui.content.ContentFactory
 
 class DeviceProviderService(private val project: Project) {
 
-    private val deviceList = mutableListOf<IDevice>()
+    private val devices = DeviceContainer()
 
     private val deviceChangeListener = object : AndroidDebugBridge.IDeviceChangeListener {
         override fun deviceConnected(device: IDevice?) {
@@ -39,28 +40,27 @@ class DeviceProviderService(private val project: Project) {
 
     private fun addDeviceWindow(device: IDevice) {
         ApplicationManager.getApplication().invokeLater {
-            val contentManager = ToolWindowManager.getInstance(project).getToolWindow("adb")?.contentManager
-            val contentFactory = ContentFactory.SERVICE.getInstance()
-            val deviceContent = contentFactory.createContent(AdbToolWindow.deviceContent, device.serialNumber, false)
-            if (deviceList.isEmpty()) {
+            val contentManager = contentManager()
+            if (devices.isEmpty()) {
                 contentManager?.removeAllContents(true)
             }
-            deviceList.add(device)
+            devices.add(device)
+            val adbToolWindowPanel = AdbToolWindowPanel(device)
+            val deviceContent = contentFactory().createContent(adbToolWindowPanel, device.serialNumber, false)
             contentManager?.addContent(deviceContent)
         }
     }
 
     private fun removeDeviceWindow(device: IDevice) {
         ApplicationManager.getApplication().invokeLater {
-            val index = deviceList.indexOf(device)
-            deviceList.remove(device)
-            val contentManager = ToolWindowManager.getInstance(project).getToolWindow("adb")?.contentManager
+            val contentManager = contentManager()
+            val index = devices.remove(device)
             val removedDeviceContent = contentManager?.getContent(index)
             removedDeviceContent?.let {
                 contentManager.removeContent(removedDeviceContent, true)
             }
-            if (deviceList.size == 0) {
-                val contentFactory = ContentFactory.SERVICE.getInstance()
+            if (devices.isEmpty()) {
+                val contentFactory = contentFactory()
                 val emptyContent = contentFactory.createContent(AdbToolWindow.emptyContent, "", false)
                 contentManager?.addContent(emptyContent)
             }
@@ -70,4 +70,7 @@ class DeviceProviderService(private val project: Project) {
     fun tearDown() {
         AndroidDebugBridge.removeDeviceChangeListener(deviceChangeListener)
     }
+
+    private fun contentFactory() = ContentFactory.SERVICE.getInstance()
+    private fun contentManager() = ToolWindowManager.getInstance(project).getToolWindow("adb")?.contentManager
 }
