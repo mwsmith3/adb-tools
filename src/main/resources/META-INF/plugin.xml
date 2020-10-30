@@ -1,19 +1,25 @@
 <idea-plugin>
     <id>com.github.mwsmith3.adbtools</id>
-    <name>adb-tools</name>
-    <vendor>mwsmith3</vendor>
+    <name>ADB Tools</name>
+    <vendor>Matthew Smith</vendor>
 
     <!-- Product and plugin compatibility requirements -->
     <!-- https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html -->
     <depends>com.intellij.modules.platform</depends>
+    <depends>org.jetbrains.android</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <applicationService serviceImplementation="com.github.mwsmith3.adbtools.services.MyApplicationService"/>
-        <projectService serviceImplementation="com.github.mwsmith3.adbtools.services.MyProjectService"/>
+        <projectService serviceImplementation="com.github.mwsmith3.adbtools.services.DeviceProviderService"/>
+        <toolWindow
+                id="adb"
+                icon="AllIcons.Toolwindows.ToolWindowDebugger"
+                anchor="left"
+                secondary="true"
+                factoryClass="com.github.mwsmith3.adbtools.ui.AdbToolWindowFactory"/>
     </extensions>
 
-    <applicationListeners>
-        <listener class="com.github.mwsmith3.adbtools.listeners.MyProjectManagerListener"
+    <projectListeners>
+        <listener class="com.github.mwsmith3.adbtools.listeners.ProjectListener"
                   topic="com.intellij.openapi.project.ProjectManagerListener"/>
-    </applicationListeners>
+    </projectListeners>
 </idea-plugin>
