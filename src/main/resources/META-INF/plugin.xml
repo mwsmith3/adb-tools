@@ -9,28 +9,30 @@
     <depends>org.jetbrains.android</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <projectService serviceImplementation="com.github.mwsmith3.adbtools.services.DeviceProviderService"/>
+        <applicationService serviceImplementation="com.github.mwsmith3.adbtools.device.DeviceProviderService"/>
+        <projectService serviceImplementation="com.github.mwsmith3.adbtools.window.AdbToolWindowManager"/>
         <toolWindow
                 id="adb"
                 icon="AllIcons.Toolwindows.ToolWindowDebugger"
                 anchor="left"
                 secondary="true"
-                factoryClass="com.github.mwsmith3.adbtools.ui.AdbToolWindowFactory"/>
+                factoryClass="com.github.mwsmith3.adbtools.window.AdbToolWindowFactory"/>
     </extensions>
 
     <projectListeners>
-        <listener class="com.github.mwsmith3.adbtools.listeners.ProjectListener"
-                  topic="com.intellij.openapi.project.ProjectManagerListener"/>
+        <listener class="com.github.mwsmith3.adbtools.window.AdbToolWindowManager"
+                  topic="com.github.mwsmith3.adbtools.device.DeviceListener"/>
+        <listener class="com.github.mwsmith3.adbtools.listeners.AdbExecutorListener"
+                  topic="com.github.mwsmith3.adbtools.listeners.AdbExecutor"/>
     </projectListeners>
 
     <actions>
-        <group id="com.github.mwsmith3.adbtools.ADBActions" text="ADB ToolWindow Actions">
+        <group id="com.github.mwsmith3.adbtools.window.actions" text="ADB ToolWindow Actions">
             <action id="com.github.mwsmith3.adbtools.actions.TalkbackAction"
                     class="com.github.mwsmith3.adbtools.actions.TalkbackAction" text="TalkBack Action"
                     description="Toggles TalkBack on a Android device"
-                    icon="NetIcons.Common.MessageInfo(Gray)">
+                    icon="AdbToolsIcons.AccessibilityIcon">
             </action>
         </group>
-
     </actions>
 </idea-plugin>
