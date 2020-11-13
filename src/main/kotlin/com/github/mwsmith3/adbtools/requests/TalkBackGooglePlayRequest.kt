@@ -6,7 +6,7 @@ import com.intellij.openapi.project.Project
 import java.util.concurrent.TimeUnit
 
 class TalkBackGooglePlayRequest : Request<Unit>() {
-    private val command = "am start -a android.intent.action.VIEW -d 'market://details?id=com.google.android.marvin.talkback'"
+    override val command = "am start -a android.intent.action.VIEW -d 'market://details?id=com.google.android.marvin.talkback'"
 
     override val requestDescription: String
         get() = "Navigate to GooglePlay TalkBack install"

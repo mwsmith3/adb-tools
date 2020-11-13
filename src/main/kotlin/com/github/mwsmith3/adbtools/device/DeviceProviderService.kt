@@ -3,10 +3,7 @@ package com.github.mwsmith3.adbtools.device
 import com.android.ddmlib.AndroidDebugBridge
 import com.android.ddmlib.IDevice
 import com.intellij.openapi.Disposable
-import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.diagnostic.Logger
-import com.intellij.openapi.project.Project
-import com.intellij.openapi.project.ProjectManagerListener
 
 class DeviceProviderService : Disposable {
     private val _devices = mutableListOf<IDevice>()

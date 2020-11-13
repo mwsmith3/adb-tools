@@ -7,35 +7,28 @@ import com.android.ddmlib.TimeoutException
 import com.github.mwsmith3.adbtools.util.NotificationHelper
 import com.intellij.openapi.project.Project
 import kotlinx.coroutines.runBlocking
+import java.io.IOException
 
 abstract class Request<T> {
     // TODO check generics
-    // TODO Change the response to handle something like a Resource
 
-    fun call(project: Project, device: IDevice): Response<T> {
+    @Throws(TimeoutException::class, AdbCommandRejectedException::class, ShellCommandUnresponsiveException::class, IOException::class)
+    fun call(project: Project, device: IDevice): T {
+        NotificationHelper.info("${device.name}: $command")
         return try {
             runBlocking {
-                val response = execute(project, device)
-                Response.Success(response)
+                execute(project, device)
             }
         } catch (e: Exception) {
-            val reason = when (e) {
-                is TimeoutException -> "timeout"
-                is AdbCommandRejectedException -> "adb command rejected"
-                is ShellCommandUnresponsiveException -> "adb shell unresponsive"
-                else -> "unknown"
+            if (e is TimeoutException || e is AdbCommandRejectedException || e is ShellCommandUnresponsiveException || e is IOException) {
+                NotificationHelper.error("$requestDescription failed. (${e.message})")
             }
-            NotificationHelper.error("$requestDescription failed. ($reason)")
-            Response.Error(e)
+            throw e
         }
     }
 
     abstract val requestDescription: String
+    abstract val command: String
 
     abstract fun execute(project: Project, device: IDevice): T
-
-    sealed class Response<out T> {
-        data class Success<T>(val response: T) : Response<T>()
-        data class Error(val error: Throwable) : Response<Nothing>()
-    }
 }
