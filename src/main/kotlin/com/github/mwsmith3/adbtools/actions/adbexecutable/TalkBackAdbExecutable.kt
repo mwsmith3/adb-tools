@@ -3,6 +3,9 @@ package com.github.mwsmith3.adbtools.actions.adbexecutable
 import com.android.ddmlib.IDevice
 import com.github.mwsmith3.adbtools.adb.publishAdbExecutable
 import com.github.mwsmith3.adbtools.requests.*
+import com.github.mwsmith3.adbtools.requests.talkback.GetTalkBackEnabledRequest
+import com.github.mwsmith3.adbtools.requests.talkback.GoToTalkBackGooglePlayRequest
+import com.github.mwsmith3.adbtools.requests.talkback.ToggleTalkBackRequest
 import com.intellij.notification.NotificationAction
 import com.intellij.notification.NotificationDisplayType
 import com.intellij.notification.NotificationGroup
@@ -23,7 +26,7 @@ object TalkBackAdbExecutable : AdbExecutable {
                     NotificationAction.createSimple("Go to Google Play") {
                         project.publishAdbExecutable(device, object : AdbExecutable {
                             override fun execute(project: Project, device: IDevice) {
-                                TalkBackGooglePlayRequest().call(project, device)
+                                GoToTalkBackGooglePlayRequest().call(project, device)
                                 notification.expire()
                             }
                         })

@@ -1,11 +1,12 @@
-package com.github.mwsmith3.adbtools.requests
+package com.github.mwsmith3.adbtools.requests.talkback
 
 import com.android.ddmlib.IDevice
 import com.github.mwsmith3.adbtools.adb.GenericReceiver
+import com.github.mwsmith3.adbtools.requests.Request
 import com.intellij.openapi.project.Project
 import java.util.concurrent.TimeUnit
 
-class TalkBackGooglePlayRequest : Request<Unit>() {
+class GoToTalkBackGooglePlayRequest : Request<Unit>() {
     override val command = "am start -a android.intent.action.VIEW -d 'market://details?id=com.google.android.marvin.talkback'"
 
     override val requestDescription: String
