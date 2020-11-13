@@ -1,4 +1,4 @@
-package com.github.mwsmith3.adbtools.listeners
+package com.github.mwsmith3.adbtools.adb
 
 import com.android.ddmlib.IDevice
 import com.github.mwsmith3.adbtools.actions.adbexecutable.AdbExecutable

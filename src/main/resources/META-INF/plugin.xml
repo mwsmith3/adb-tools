@@ -22,8 +22,8 @@
     <projectListeners>
         <listener class="com.github.mwsmith3.adbtools.window.AdbToolWindowManager"
                   topic="com.github.mwsmith3.adbtools.device.DeviceListener"/>
-        <listener class="com.github.mwsmith3.adbtools.listeners.AdbExecutorListener"
-                  topic="com.github.mwsmith3.adbtools.listeners.AdbExecutor"/>
+        <listener class="com.github.mwsmith3.adbtools.adb.AdbExecutorListener"
+                  topic="com.github.mwsmith3.adbtools.adb.AdbExecutor"/>
     </projectListeners>
 
     <actions>

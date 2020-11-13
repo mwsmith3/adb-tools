@@ -1,7 +1,7 @@
 package com.github.mwsmith3.adbtools.actions.adbexecutable
 
 import com.android.ddmlib.IDevice
-import com.github.mwsmith3.adbtools.listeners.publishAdbExecutable
+import com.github.mwsmith3.adbtools.adb.publishAdbExecutable
 import com.github.mwsmith3.adbtools.requests.GetTalkBackInstalledRequest
 import com.github.mwsmith3.adbtools.requests.Request
 import com.github.mwsmith3.adbtools.requests.TalkBackGooglePlayRequest
