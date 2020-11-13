@@ -9,7 +9,6 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.ProjectManagerListener
 
 class DeviceProviderService : Disposable {
-    // TODO make disposable?
     private val _devices = mutableListOf<IDevice>()
     val devices: List<IDevice> = _devices
 
@@ -18,7 +17,7 @@ class DeviceProviderService : Disposable {
             Logger.getInstance(DeviceProviderService::class.java).info("DEVICE CONNECTED: device: ${device?.name} changed, state: ${device?.state}, avd name: ${device?.avdName}, offline: ${device?.isOffline}, online: ${device?.isOnline}")
             device?.let {
                 _devices.add(it)
-                ApplicationManager.getApplication().publishDeviceChanges(devices)
+                publish()
             }
         }
 
@@ -26,7 +25,7 @@ class DeviceProviderService : Disposable {
             Logger.getInstance(DeviceProviderService::class.java).info("DEVICE DISCONNECTED: device: ${device?.name} changed, state: ${device?.state}, avd name: ${device?.avdName}, offline: ${device?.isOffline}, online: ${device?.isOnline}")
             device?.let {
                 _devices.remove(it)
-                ApplicationManager.getApplication().publishDeviceChanges(devices)
+                publish()
             }
         }
 
@@ -41,5 +40,9 @@ class DeviceProviderService : Disposable {
 
     override fun dispose() {
         AndroidDebugBridge.removeDeviceChangeListener(deviceChangeListener)
+    }
+
+    private fun publish() {
+        DeviceListener.publish(devices)
     }
 }
