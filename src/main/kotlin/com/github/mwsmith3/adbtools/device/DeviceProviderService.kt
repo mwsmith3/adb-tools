@@ -6,6 +6,7 @@ import com.intellij.openapi.Disposable
 import com.intellij.openapi.diagnostic.Logger
 
 class DeviceProviderService : Disposable {
+    // TODO doesn't recognise device if you restart the application
     private val _devices = mutableListOf<IDevice>()
     val devices: List<IDevice> = _devices
 

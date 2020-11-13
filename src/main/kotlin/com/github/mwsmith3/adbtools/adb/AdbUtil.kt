@@ -4,6 +4,9 @@ import com.android.tools.idea.gradle.project.sync.GradleSyncState
 import com.github.mwsmith3.adbtools.util.NotificationHelper.info
 import com.intellij.openapi.project.Project
 
+/**
+ * Taken from https://github.com/pbreault/adb-idea
+ */
 object AdbUtil {
     // TODO print adb commands to log
 

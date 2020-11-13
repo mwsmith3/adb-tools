@@ -10,7 +10,7 @@ class AdbToolWindowManager(private val project: Project) : DeviceListener {
 
     override fun onDevicesChanged(devices: List<IDevice>) {
         Logger.getInstance(AdbToolWindowManager::class.java).info("Devices changed: $devices")
-        val contents = AdbToolWindowFactory.getContents(devices)
+        val contents = AdbToolWindowFactory.getContents(devices, project)
         val contentManager = contentManager()
         contentManager?.removeAllContents(true)
         contents.forEach {

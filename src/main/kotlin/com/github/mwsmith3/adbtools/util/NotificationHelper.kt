@@ -4,6 +4,9 @@ import com.intellij.notification.NotificationDisplayType
 import com.intellij.notification.NotificationGroup
 import com.intellij.notification.NotificationType
 
+/**
+ * Taken from https://github.com/pbreault/adb-idea
+ */
 object NotificationHelper {
     private val INFO = NotificationGroup("ADB Tools (Logging)", NotificationDisplayType.NONE, true, null, null)
     private val ERRORS = NotificationGroup("ADB Tools (Errors)", NotificationDisplayType.BALLOON, true, null, null)

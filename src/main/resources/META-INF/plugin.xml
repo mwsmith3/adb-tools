@@ -31,8 +31,11 @@
             <action id="com.github.mwsmith3.adbtools.actions.TalkbackAction"
                     class="com.github.mwsmith3.adbtools.actions.TalkbackAction" text="TalkBack Action"
                     description="Toggles TalkBack on a Android device"
-                    icon="AdbToolsIcons.AccessibilityIcon">
-            </action>
+                    icon="AdbToolsIcons.AccessibilityIcon" />
         </group>
+        <action id="com.github.mwsmith3.adbtools.deeplink" text="Open DeepLink"
+                class="com.github.mwsmith3.adbtools.actions.OpenDeepLinkAction"
+                description="Open a deep link"
+                icon="AdbToolsIcons.AccessibilityIcon" />
     </actions>
 </idea-plugin>

@@ -42,6 +42,7 @@ repositories {
 }
 dependencies {
     detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.14.2")
+    implementation("org.jooq:joor-java-8:0.9.7")
 }
 
 // Configure gradle-intellij-plugin plugin.

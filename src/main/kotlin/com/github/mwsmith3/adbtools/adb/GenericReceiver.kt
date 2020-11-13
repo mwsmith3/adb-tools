@@ -4,6 +4,9 @@ import com.android.ddmlib.MultiLineReceiver
 import java.util.ArrayList
 import java.util.regex.Pattern
 
+/**
+ * Taken from https://github.com/pbreault/adb-idea
+ */
 class GenericReceiver : MultiLineReceiver() {
 
     val adbOutputLines: MutableList<String> = ArrayList()

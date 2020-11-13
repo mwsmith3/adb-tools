@@ -2,10 +2,11 @@ package com.github.mwsmith3.adbtools.actions.adbexecutable
 
 import com.android.ddmlib.IDevice
 import com.github.mwsmith3.adbtools.adb.publishAdbExecutable
+import com.github.mwsmith3.adbtools.command.GetPackageInstalledCommand
+import com.github.mwsmith3.adbtools.command.talkback.GetTalkBackEnabledCommand
+import com.github.mwsmith3.adbtools.command.talkback.GoToTalkBackGooglePlayCommand
+import com.github.mwsmith3.adbtools.command.talkback.ToggleTalkBackCommand
 import com.github.mwsmith3.adbtools.requests.*
-import com.github.mwsmith3.adbtools.requests.talkback.GetTalkBackEnabledRequest
-import com.github.mwsmith3.adbtools.requests.talkback.GoToTalkBackGooglePlayRequest
-import com.github.mwsmith3.adbtools.requests.talkback.ToggleTalkBackRequest
 import com.intellij.notification.NotificationAction
 import com.intellij.notification.NotificationDisplayType
 import com.intellij.notification.NotificationGroup
@@ -16,17 +17,17 @@ object TalkBackAdbExecutable : AdbExecutable {
     private val TALKBACK_NOTIFICATION_GROUP = NotificationGroup("TalkBack Install", NotificationDisplayType.STICKY_BALLOON, true, null, null)
 
     override fun execute(project: Project, device: IDevice) {
-        val talkBackInstalled = GetPackageInstalledRequest("com.google.android.marvin.talkback").call(project, device)
+        val talkBackInstalled = CommandRunner.run(device, GetPackageInstalledCommand("com.google.android.marvin.talkback"))
         if (talkBackInstalled) {
-            val talkBackEnabled = GetTalkBackEnabledRequest().call(project, device)
-            ToggleTalkBackRequest(talkBackEnabled).call(project, device)
+            val talkBackEnabled = CommandRunner.run(device, GetTalkBackEnabledCommand)
+            CommandRunner.run(device, ToggleTalkBackCommand(talkBackEnabled))
         } else {
             val notification = TALKBACK_NOTIFICATION_GROUP.createNotification("TalkBack not installed", "Do you want to install TalkBack?", NotificationType.ERROR)
             notification.addAction(
                     NotificationAction.createSimple("Go to Google Play") {
                         project.publishAdbExecutable(device, object : AdbExecutable {
                             override fun execute(project: Project, device: IDevice) {
-                                GoToTalkBackGooglePlayRequest().call(project, device)
+                                CommandRunner.run(device, GoToTalkBackGooglePlayCommand)
                                 notification.expire()
                             }
                         })

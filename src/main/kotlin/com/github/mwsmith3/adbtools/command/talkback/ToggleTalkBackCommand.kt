@@ -1,19 +1,15 @@
-package com.github.mwsmith3.adbtools.requests.talkback
+package com.github.mwsmith3.adbtools.command.talkback
 
 import com.android.ddmlib.IDevice
 import com.github.mwsmith3.adbtools.adb.GenericReceiver
-import com.github.mwsmith3.adbtools.requests.Request
-import com.intellij.openapi.project.Project
+import com.github.mwsmith3.adbtools.command.Command
 import java.util.concurrent.TimeUnit
 
-class ToggleTalkBackRequest(private val enabled: Boolean) : Request<Unit>() {
+class ToggleTalkBackCommand(private val enabled: Boolean) : Command<Unit> {
 
     private val putTalkBackCommand = "settings put secure enabled_accessibility_services "
     private val talkBackOffSetting = "com.android.talkback/com.google.android.marvin.talkback.TalkBackService"
     private val talkBackOnSetting = "com.google.android.marvin.talkback/com.google.android.marvin.talkback.TalkBackService"
-
-    override val requestDescription: String
-        get() = "Toggle TalkBack status"
 
     override val command: String
         get() = if (enabled) {
@@ -22,7 +18,10 @@ class ToggleTalkBackRequest(private val enabled: Boolean) : Request<Unit>() {
             putTalkBackCommand + talkBackOnSetting
         }
 
-    override fun execute(project: Project, device: IDevice) {
+    override val description: String
+        get() = "Toggle TalkBack status"
+
+    override fun run(device: IDevice) {
         device.executeShellCommand(command, GenericReceiver(), 15L, TimeUnit.SECONDS)
     }
 }
