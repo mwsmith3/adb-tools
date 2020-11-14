@@ -7,6 +7,7 @@
     <!-- https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html -->
     <depends>com.intellij.modules.platform</depends>
     <depends>org.jetbrains.android</depends>
+    <depends>com.intellij.modules.androidstudio</depends>
 
     <extensions defaultExtensionNs="com.intellij">
         <applicationService serviceImplementation="com.github.mwsmith3.adbtools.device.DeviceProviderService"/>
@@ -31,6 +32,10 @@
             <action id="com.github.mwsmith3.adbtools.actions.TalkbackAction"
                     class="com.github.mwsmith3.adbtools.actions.TalkbackAction" text="TalkBack Action"
                     description="Toggles TalkBack on a Android device"
+                    icon="AdbToolsIcons.AccessibilityIcon" />
+            <action id="com.github.mwsmith3.adbtools.actions.strings"
+                    class="com.github.mwsmith3.adbtools.actions.PrintStringsAction" text="Print strings"
+                    description="Prints strings"
                     icon="AdbToolsIcons.AccessibilityIcon" />
         </group>
         <action id="com.github.mwsmith3.adbtools.deeplink" text="Open DeepLink"

@@ -11,8 +11,10 @@ object DeepLinkParser {
     fun getDeepLinks(project: Project): List<DeepLink> {
         val manifests = ManifestFinder.find(project)
         val facetAndActivity = manifests.flatMap { manifest ->
-            manifest.application.activities.map {
-                Pair(manifest.androidFacet, it)
+            manifest.application.activities.mapNotNull { activity ->
+                manifest.androidFacet?.let {  facet ->
+                    Pair(facet, activity)
+                }
             }
         }
         val intentFilters = facetAndActivity.flatMap { pair ->
@@ -21,7 +23,6 @@ object DeepLinkParser {
             }
         }
         val deepLinkIntentFilters = intentFilters.filter { intentFilter ->
-            intentFilter.first != null &&
             AndroidDomUtil.containsAction(intentFilter.second, "android.intent.action.VIEW") &&
                     AndroidDomUtil.containsCategory(intentFilter.second, "android.intent.category.DEFAULT") &&
                     AndroidDomUtil.containsCategory(intentFilter.second, "android.intent.category.BROWSABLE")
@@ -34,12 +35,12 @@ object DeepLinkParser {
         return dataElements.mapNotNull { getDeepLinkFromData(it.first, it.second) }
     }
 
-    private fun getDeepLinkFromData(facet: AndroidFacet?, data: Data): DeepLink? {
+    private fun getDeepLinkFromData(facet: AndroidFacet, data: Data): DeepLink? {
         val attributes = data.xmlTag?.attributes?.toList().orEmpty()
-        val scheme = attributes.find { it.name == "android:scheme" }?.value
-        val host = attributes.find { it.name == "android:host" }?.value
-        val pathPrefix = attributes.find { it.name == "android:pathPrefix" }?.value
-        val packageName = facet?.let {
+        val scheme = attributes.find { it.name == "android:scheme" }?.value?.resolveResource(facet)
+        val host = attributes.find { it.name == "android:host" }?.value?.resolveResource(facet)
+        val pathPrefix = attributes.find { it.name == "android:pathPrefix" }?.value?.resolveResource(facet)
+        val packageName = facet.let {
             AndroidModuleModel.get(it)?.applicationId
         }
         return if (packageName != null && scheme != null && host != null) {
@@ -47,6 +48,15 @@ object DeepLinkParser {
         } else {
             null
         }
+    }
+}
+
+fun String.resolveResource(facet: AndroidFacet): String {
+    return if (this.startsWith("@string/")) {
+        val key = this.removePrefix("@string/")
+        GetAndroidStrings.getValue(facet, key) ?: ""
+    } else {
+        this
     }
 }
 
