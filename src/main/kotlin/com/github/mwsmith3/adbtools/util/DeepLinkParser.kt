@@ -4,6 +4,7 @@ import android.net.Uri
 import com.android.ide.common.xml.AndroidManifestParser
 import com.android.tools.idea.gradle.project.model.AndroidModuleModel
 import com.android.tools.idea.util.androidFacet
+import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.project.Project
 import org.jetbrains.android.dom.AndroidDomUtil
 import org.jetbrains.android.dom.manifest.Data
@@ -70,11 +71,15 @@ object DeepLinkParser {
             it.value?.resolveResource(facet)
         }
 
+        Logger.getInstance(ManifestFinder::class.java).info("schemes: $schemes")
+        Logger.getInstance(ManifestFinder::class.java).info("hosts: $hosts")
+        Logger.getInstance(ManifestFinder::class.java).info("paths: $paths")
+
         val links = mutableListOf<DeepLink>()
         schemes.forEach { scheme ->
             hosts.forEach { host ->
                 paths.forEach { path ->
-                    links += DeepLink(packageName, scheme, host, path)
+                    links.add(DeepLink(packageName, scheme, host, path))
                 }
             }
         }
