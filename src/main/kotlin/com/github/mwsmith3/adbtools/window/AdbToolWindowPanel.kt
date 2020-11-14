@@ -52,8 +52,8 @@ class AdbToolWindowPanel(private val device: IDevice, private val project: Proje
         this.setContent(windowContent)
     }
 
-    private fun getSelectedDeepLink(): DeepLink {
-        return deepLinks[selected]
+    private fun getSelectedDeepLink(): DeepLink? {
+        return deepLinks.getOrNull(selected)
     }
 
     override fun getData(dataId: String): Any? {
@@ -65,7 +65,9 @@ class AdbToolWindowPanel(private val device: IDevice, private val project: Proje
                 getStrings()
             }
             DEEP_LINK_KEY.`is`(dataId) -> {
-                DeepLinkData(getSelectedDeepLink(), false, "", "")
+                getSelectedDeepLink()?.let {
+                    DeepLinkData(it, false, "", "")
+                }
             }
             else -> {
                 super.getData(dataId)
