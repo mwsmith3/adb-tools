@@ -10,6 +10,7 @@ import com.intellij.openapi.actionSystem.DataKey
 import com.intellij.openapi.actionSystem.DefaultActionGroup
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.SimpleToolWindowPanel
+import com.intellij.ui.CollectionComboBoxModel
 import com.intellij.ui.layout.PropertyBinding
 import com.intellij.ui.layout.panel
 import org.jetbrains.android.facet.AndroidFacet
@@ -22,17 +23,18 @@ class AdbToolWindowPanel(private val device: IDevice, private val project: Proje
     // TODO fix icon
 
     private val deepLinks: Vector<DeepLink> = Vector(DeepLinkParser.getDeepLinks(project))
-    private var selected = 0
 
     private val openDeepLinkAction = ActionManager.getInstance().getAction("com.github.mwsmith3.adbtools.deeplink")
+
+    private val deepLinkComboBoxModel = CollectionComboBoxModel(deepLinks)
 
     private val windowContent = panel {
         row {
             label("Deep links:")
-            comboBox(DefaultComboBoxModel(deepLinks), {
-                getSelectedDeepLink()
+            comboBox(deepLinkComboBoxModel, {
+                deepLinkComboBoxModel.selected
             }, {
-                selected = deepLinks.indexOf(it)
+                deepLinkComboBoxModel.selectedItem = it
             })
             buttonFromAction("DL", ActionPlaces.TOOLBAR, openDeepLinkAction)
         }
@@ -43,7 +45,6 @@ class AdbToolWindowPanel(private val device: IDevice, private val project: Proje
     }
 
     init {
-
         val actionManager = ActionManager.getInstance()
         val actionGroup = actionManager.getAction("com.github.mwsmith3.adbtools.window.actions") as DefaultActionGroup
         val actionToolbar = actionManager.createActionToolbar(ActionPlaces.TOOLBAR, actionGroup, true)
@@ -52,9 +53,7 @@ class AdbToolWindowPanel(private val device: IDevice, private val project: Proje
         this.setContent(windowContent)
     }
 
-    private fun getSelectedDeepLink(): DeepLink? {
-        return deepLinks.getOrNull(selected)
-    }
+    private fun getSelectedDeepLink() = deepLinkComboBoxModel.selected
 
     override fun getData(dataId: String): Any? {
         return when {
