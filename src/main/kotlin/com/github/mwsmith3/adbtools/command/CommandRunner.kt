@@ -1,12 +1,10 @@
-package com.github.mwsmith3.adbtools.requests
+package com.github.mwsmith3.adbtools.command
 
 import com.android.ddmlib.AdbCommandRejectedException
 import com.android.ddmlib.IDevice
 import com.android.ddmlib.ShellCommandUnresponsiveException
 import com.android.ddmlib.TimeoutException
-import com.github.mwsmith3.adbtools.command.Command
 import com.github.mwsmith3.adbtools.util.NotificationHelper
-import com.intellij.openapi.project.Project
 import kotlinx.coroutines.runBlocking
 import java.io.IOException
 

@@ -1,11 +1,8 @@
-package com.github.mwsmith3.adbtools.util
+package com.github.mwsmith3.adbtools.deeplinks
 
-import android.net.Uri
-import com.android.ide.common.xml.AndroidManifestParser
 import com.android.tools.idea.gradle.project.model.AndroidModuleModel
-import com.android.tools.idea.naveditor.property.editors.getAnimatorsPopupContent
 import com.android.tools.idea.util.androidFacet
-import com.intellij.openapi.diagnostic.Logger
+import com.github.mwsmith3.adbtools.util.GetAndroidStrings
 import com.intellij.openapi.project.Project
 import com.intellij.psi.xml.XmlAttribute
 import org.jetbrains.android.dom.AndroidDomUtil
@@ -32,11 +29,6 @@ object DeepLinkParser {
                     AndroidDomUtil.containsCategory(intentFilter.second, "android.intent.category.DEFAULT") &&
                     AndroidDomUtil.containsCategory(intentFilter.second, "android.intent.category.BROWSABLE")
         }
-        deepLinkIntentFilters[0].second.dataElements.mapNotNull {
-
-        }
-
-
         val attrs = deepLinkIntentFilters.mapNotNull { pair ->
             val packageName = AndroidModuleModel.get(pair.first)?.applicationId
             packageName?.let {
@@ -45,11 +37,11 @@ object DeepLinkParser {
         }
 
         return attrs.flatMap {
-            getDeepLinks(it)
+            getDeepLinksFromDeepLinkDataAttrs(it)
         }
     }
 
-    private fun getDeepLinks(attrs: DeepLinkDataAttributes): List<DeepLink> {
+    private fun getDeepLinksFromDeepLinkDataAttrs(attrs: DeepLinkDataAttributes): List<DeepLink> {
         // TODO it should work according to this https://developer.android.com/guide/topics/manifest/data-element
         val schemes = getSchemes(attrs)
         val hosts = getHosts(attrs)
@@ -185,3 +177,4 @@ data class DeepLink(val packageName: String, val scheme: String, val host: Strin
 }
 
 data class DeepLinkDataAttributes(val facet: AndroidFacet, val packageName: String, val data: List<Data>)
+data class DeepLinkData(val deepLink: DeepLink, val attachDebugger: Boolean, val param: String, val value: String)

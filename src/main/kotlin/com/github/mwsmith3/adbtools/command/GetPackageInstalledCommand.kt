@@ -2,6 +2,7 @@ package com.github.mwsmith3.adbtools.command
 
 import com.android.ddmlib.IDevice
 import com.github.mwsmith3.adbtools.adb.GenericReceiver
+import com.github.mwsmith3.adbtools.command.Command
 import java.util.concurrent.TimeUnit
 
 class GetPackageInstalledCommand(private val packageName: String) : Command<Boolean> {

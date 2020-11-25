@@ -1,4 +1,4 @@
-package com.github.mwsmith3.adbtools.command.talkback
+package com.github.mwsmith3.adbtools.command.settings
 
 import com.android.ddmlib.IDevice
 import com.github.mwsmith3.adbtools.adb.GenericReceiver

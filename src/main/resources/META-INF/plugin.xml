@@ -3,43 +3,68 @@
     <name>ADB Tools</name>
     <vendor>Matthew Smith</vendor>
 
+    // TODO check facets setup
+
     <!-- Product and plugin compatibility requirements -->
     <!-- https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html -->
     <depends>com.intellij.modules.platform</depends>
     <depends>org.jetbrains.android</depends>
-    <depends>com.intellij.modules.androidstudio</depends>
+<!--    <depends>com.intellij.modules.androidstudio</depends>-->
 
     <extensions defaultExtensionNs="com.intellij">
-        <applicationService serviceImplementation="com.github.mwsmith3.adbtools.device.DeviceProviderService"/>
-        <projectService serviceImplementation="com.github.mwsmith3.adbtools.window.AdbToolWindowManager"/>
+        <projectService serviceImplementation="com.github.mwsmith3.adbtools.device.DeviceProviderService"/>
+        <projectService serviceImplementation="com.github.mwsmith3.adbtools.adb.AdbExecutorService"/>
         <toolWindow
-                id="adb"
-                icon="AllIcons.Toolwindows.ToolWindowDebugger"
+                id="Android Debug Bridge Tools"
+                icon="AllIcons.Toolwindows.ToolWindowBuild"
                 anchor="left"
                 secondary="true"
                 factoryClass="com.github.mwsmith3.adbtools.window.AdbToolWindowFactory"/>
     </extensions>
 
-    <projectListeners>
-        <listener class="com.github.mwsmith3.adbtools.window.AdbToolWindowManager"
-                  topic="com.github.mwsmith3.adbtools.device.DeviceListener"/>
-        <listener class="com.github.mwsmith3.adbtools.adb.AdbExecutorListener"
-                  topic="com.github.mwsmith3.adbtools.adb.AdbExecutor"/>
-    </projectListeners>
-
     <actions>
-        <group id="com.github.mwsmith3.adbtools.window.actions" text="ADB ToolWindow Actions">
-            <action id="com.github.mwsmith3.adbtools.actions.TalkbackAction"
-                    class="com.github.mwsmith3.adbtools.actions.TalkbackAction" text="TalkBack Action"
-                    description="Toggles TalkBack on a Android device"
+        <group id="com.github.mwsmith3.adbtools.window.actions" text="ADB App Actions">
+            <action id="com.github.mwsmith3.adbtools.actions.app.StartDefaultActivityAction"
+                    class="com.github.mwsmith3.adbtools.actions.app.StartDefaultActivityAction" text="Start Default Activity"
+                    description="Start default activity"
+                    icon="AllIcons.Actions.Execute" />
+            <action id="com.github.mwsmith3.adbtools.actions.app.RestartAction"
+                    class="com.github.mwsmith3.adbtools.actions.app.RestartAction" text="Restart Default Activity"
+                    description="Restart default activity"
+                    icon="AllIcons.Actions.Restart" />
+            <action id="com.github.mwsmith3.adbtools.actions.app.KillAction"
+                    class="com.github.mwsmith3.adbtools.actions.app.KillAction" text="Kill App"
+                    description="Kill app"
+                    icon="AllIcons.Debugger.KillProcess" />
+            <action id="com.github.mwsmith3.adbtools.actions.app.UninstallAction"
+                    class="com.github.mwsmith3.adbtools.actions.app.UninstallAction" text="Uninstall App"
+                    description="Uninstall app"
+                    icon="AllIcons.Actions.Uninstall" />
+            <action id="com.github.mwsmith3.adbtools.actions.app.ClearDataAndRestartAction"
+                    class="com.github.mwsmith3.adbtools.actions.app.ClearDataAndRestartAction" text="Clear Data And Restart"
+                    description="Clear data and restart"
+                    icon="AdbToolsIcons.ClearDataIcon" />
+            <separator/>
+            <action id="com.github.mwsmith3.adbtools.actions.settings.EnableDeveloperOptionsAction"
+                    class="com.github.mwsmith3.adbtools.actions.settings.EnableDeveloperOptionsAction" text="Enable Developer Options"
+                    description="Enable developer options"
+                    icon="AllIcons.Json.Object" />
+            <action id="com.github.mwsmith3.adbtools.actions.settings.TalkbackAction"
+                    class="com.github.mwsmith3.adbtools.actions.settings.TalkbackAction" text="Toggle TalkBack"
+                    description="Toggle TalkBack on a Android device"
                     icon="AdbToolsIcons.AccessibilityIcon" />
-            <action id="com.github.mwsmith3.adbtools.actions.strings"
-                    class="com.github.mwsmith3.adbtools.actions.PrintStringsAction" text="Print strings"
-                    description="Prints strings"
-                    icon="AdbToolsIcons.AccessibilityIcon" />
+            <action id="com.github.mwsmith3.adbtools.actions.settings.ChangeDisplaySettingsAction"
+                    class="com.github.mwsmith3.adbtools.actions.settings.ChangeDisplaySettingsAction" text="Change Device Resolution"
+                    description="Change device resolution"
+                    icon="AdbToolsIcons.ScreenIcon" />
+            <action id="com.github.mwsmith3.adbtools.actions.settings.SetAnimationScalesAction"
+                    class="com.github.mwsmith3.adbtools.actions.settings.SetAnimationScalesAction" text="Set Animation Scales"
+                    description="Set animation scales"
+                    icon="AllIcons.Process.Step_1" />
         </group>
+
         <action id="com.github.mwsmith3.adbtools.deeplink" text="Open DeepLink"
-                class="com.github.mwsmith3.adbtools.actions.OpenDeepLinkAction"
+                class="com.github.mwsmith3.adbtools.actions.app.OpenDeepLinkAction"
                 description="Open a deep link"
                 icon="AdbToolsIcons.AccessibilityIcon" />
     </actions>

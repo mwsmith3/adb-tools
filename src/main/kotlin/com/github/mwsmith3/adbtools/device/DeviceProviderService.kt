@@ -2,33 +2,55 @@ package com.github.mwsmith3.adbtools.device
 
 import com.android.ddmlib.AndroidDebugBridge
 import com.android.ddmlib.IDevice
+import com.android.tools.idea.run.ConnectedAndroidDevice
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.diagnostic.Logger
+import com.intellij.openapi.project.Project
 
-class DeviceProviderService : Disposable {
-    // TODO doesn't recognise device if you restart the application
-    private val _devices = mutableListOf<IDevice>()
-    val devices: List<IDevice> = _devices
+class DeviceProviderService(private val project: Project) : Disposable {
+
+    interface DeviceChangeListener {
+        fun deviceAdded(device: ConnectedAndroidDevice)
+        fun deviceRemoved(device: ConnectedAndroidDevice)
+        fun deviceChanged(device: ConnectedAndroidDevice)
+    }
+
+    private val listeners = mutableListOf<DeviceChangeListener>()
+    private val devices = mutableListOf<ConnectedAndroidDevice>()
+
+    fun addListener(listener: DeviceChangeListener) {
+        listeners.add(listener)
+    }
 
     private val deviceChangeListener = object : AndroidDebugBridge.IDeviceChangeListener {
-        override fun deviceConnected(device: IDevice?) {
-            Logger.getInstance(DeviceProviderService::class.java).info("DEVICE CONNECTED: device: ${device?.name} changed, state: ${device?.state}, avd name: ${device?.avdName}, offline: ${device?.isOffline}, online: ${device?.isOnline}")
-            device?.let {
-                _devices.add(it)
-                publish()
+        override fun deviceConnected(iDevice: IDevice) {
+            Logger.getInstance(DeviceProviderService::class.java).info("DEVICE CONNECTED: device: ${iDevice.name} changed, state: ${iDevice.state}, avd name: ${iDevice.avdName}, offline: ${iDevice.isOffline}, online: ${iDevice.isOnline}")
+            val device = ConnectedAndroidDevice(iDevice, null)
+            devices.add(device)
+            listeners.forEach { deviceChangeListener ->
+                deviceChangeListener.deviceAdded(device)
             }
         }
 
-        override fun deviceDisconnected(device: IDevice?) {
-            Logger.getInstance(DeviceProviderService::class.java).info("DEVICE DISCONNECTED: device: ${device?.name} changed, state: ${device?.state}, avd name: ${device?.avdName}, offline: ${device?.isOffline}, online: ${device?.isOnline}")
-            device?.let {
-                _devices.remove(it)
-                publish()
+        override fun deviceDisconnected(iDevice: IDevice) {
+            Logger.getInstance(DeviceProviderService::class.java).info("DEVICE DISCONNECTED: device: ${iDevice.name} changed, state: ${iDevice.state}, avd name: ${iDevice.avdName}, offline: ${iDevice.isOffline}, online: ${iDevice.isOnline}")
+            val device = findDevice(iDevice)
+            Logger.getInstance(DeviceProviderService::class.java).info("device found is $device")
+            if (device != null) {
+                listeners.forEach { listener ->
+                    listener.deviceRemoved(device)
+                }
             }
         }
 
-        override fun deviceChanged(device: IDevice?, changeMask: Int) {
-            Logger.getInstance(DeviceProviderService::class.java).info("DEVICE CHANGED: device: ${device?.name} changed, state: ${device?.state}, avd name: ${device?.avdName}, offline: ${device?.isOffline}, online: ${device?.isOnline}")
+        override fun deviceChanged(iDevice: IDevice, changeMask: Int) {
+            Logger.getInstance(DeviceProviderService::class.java).info("DEVICE CHANGED: device: ${iDevice.name} changed, state: ${iDevice.state}, avd name: ${iDevice?.avdName}, offline: ${iDevice.isOffline}, online: ${iDevice.isOnline}")
+            val device = findDevice(iDevice)
+            if (device != null) {
+                listeners.forEach {
+                    it.deviceChanged(device)
+                }
+            }
         }
     }
 
@@ -40,7 +62,7 @@ class DeviceProviderService : Disposable {
         AndroidDebugBridge.removeDeviceChangeListener(deviceChangeListener)
     }
 
-    private fun publish() {
-        DeviceListener.publish(devices)
+    private fun findDevice(iDevice: IDevice): ConnectedAndroidDevice? {
+        return devices.firstOrNull { it.device == iDevice }
     }
 }

@@ -2,8 +2,8 @@ package com.github.mwsmith3.adbtools.command
 
 import com.android.ddmlib.IDevice
 import com.github.mwsmith3.adbtools.adb.GenericReceiver
+import com.github.mwsmith3.adbtools.deeplinks.DeepLinkData
 import com.github.mwsmith3.adbtools.util.Debugger
-import com.github.mwsmith3.adbtools.window.DeepLinkData
 import com.intellij.openapi.project.Project
 import java.util.concurrent.TimeUnit
 

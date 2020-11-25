@@ -1,4 +1,4 @@
-package com.github.mwsmith3.adbtools.util
+package com.github.mwsmith3.adbtools.deeplinks
 
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.project.Project
