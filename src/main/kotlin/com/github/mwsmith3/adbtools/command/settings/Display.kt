@@ -17,7 +17,11 @@ sealed class Display {
                 Spec(1440, 2560, 534, "Pixel XL"),
                 Spec(1080, 2280, 444, "Pixel 4"),
                 Spec(1440, 3040, 537, "Pixel 4 XL"),
-                Spec(1080, 2340, 432, "Pixel 5")
+                Spec(1080, 2340, 432, "Pixel 5"),
+                Spec(1280, 800, 216, "Nexus 7 2012"),
+                Spec(2560, 1600, 300, "Nexus 10"),
+                Spec(2560, 1800, 308, "Pixel C"),
+                Spec(3000, 2000, 293, "Pixel Slate"),
         )
     }
 }
