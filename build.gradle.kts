@@ -31,6 +31,7 @@ val platformType: String by project
 val platformVersion: String by project
 val platformPlugins: String by project
 val platformDownloadSources: String by project
+val studioCompilePath: String by project
 
 group = pluginGroup
 version = pluginVersion
@@ -53,6 +54,7 @@ intellij {
     type = platformType
     downloadSources = platformDownloadSources.toBoolean()
     updateSinceUntilBuild = true
+    localPath = studioCompilePath
 
     // Plugin Dependencies. Uses `platformPlugins` property from the gradle.properties file.
     setPlugins(*platformPlugins.split(',').map(String::trim).filter(String::isNotEmpty).toTypedArray())

@@ -15,6 +15,7 @@ import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
 import icons.AndroidIcons
 import org.jetbrains.android.facet.AndroidFacet
+import javax.swing.JCheckBox
 import javax.swing.SwingConstants
 import javax.swing.event.ListDataEvent
 import javax.swing.event.ListDataListener
@@ -23,7 +24,7 @@ class AdbToolsWindowView(private val project: Project, private val model: AdbToo
 
     private val deviceComboModel = MutableCollectionComboBoxModel<ConnectedAndroidDevice>()
     private val facetComboModel = MutableCollectionComboBoxModel<AndroidFacet>()
-
+    private var debuggerCheckBox: JCheckBox? = null
 
 //    private val deepLinks = DeepLinkParser.getDeepLinks(project)
 //    private val openDeepLinkAction = ActionManager.getInstance().getAction("com.github.mwsmith3.adbtools.deeplink")
@@ -50,6 +51,9 @@ class AdbToolsWindowView(private val project: Project, private val model: AdbToo
             }, {
                 facetComboModel.selectedItem = it
             }, facetListCellRenderer).constraints(CCFlags.growX)
+        }
+        row {
+            debuggerCheckBox = checkBox("Attach debugger", false).component
         }
 
 //            buttonFromAction("DL", ActionPlaces.TOOLBAR, openDeepLinkAction)
@@ -109,6 +113,9 @@ class AdbToolsWindowView(private val project: Project, private val model: AdbToo
             FACET_KEY.`is`(dataId) -> {
                 facetComboModel.selected
             }
+            DEBUGGER_KEY.`is`(dataId) -> {
+                debuggerCheckBox?.isSelected
+            }
 //            DEEP_LINK_KEY.`is`(dataId) -> {
 //                getSelectedDeepLink()?.let {
 //                    DeepLinkData(it, false, "", "")
@@ -118,12 +125,6 @@ class AdbToolsWindowView(private val project: Project, private val model: AdbToo
                 super.getData(dataId)
             }
         }
-    }
-
-    companion object {
-        val DEVICE_KEY = DataKey.create<IDevice>("device")
-        val DEEP_LINK_KEY = DataKey.create<DeepLinkData>("deep link")
-        val FACET_KEY = DataKey.create<AndroidFacet>("android facet")
     }
 
     private inner class ModelStateListener : AdbToolsModel.StateListener {
@@ -164,5 +165,12 @@ class AdbToolsWindowView(private val project: Project, private val model: AdbToo
             }
         }
         override fun contentsChanged(e: ListDataEvent) { }
+    }
+
+    companion object {
+        val DEVICE_KEY = DataKey.create<IDevice>("device")
+        val DEEP_LINK_KEY = DataKey.create<DeepLinkData>("deep link")
+        val FACET_KEY = DataKey.create<AndroidFacet>("android facet")
+        val DEBUGGER_KEY = DataKey.create<Boolean>("attach debugger")
     }
 }

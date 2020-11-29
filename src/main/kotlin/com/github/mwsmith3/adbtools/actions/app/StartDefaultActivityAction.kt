@@ -22,7 +22,7 @@ class StartDefaultActivityAction : AdbAction() {
                 if (packageInstalled) {
                     try {
                         val defaultActivityName = getDefaultActivityName(facet, device)
-                        CommandRunner.run(device, StartPackageCommand(packageName, defaultActivityName))
+                        CommandRunner.run(device, StartPackageCommand(getAttachDebugger(event), packageName, defaultActivityName, project))
                     } catch (e: ActivityLocator.ActivityLocatorException) {
                         NotificationHelper.error("Unable to start default activity on ${device.name}: ${e.message}")
                     }

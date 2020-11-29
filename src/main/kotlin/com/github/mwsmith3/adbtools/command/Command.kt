@@ -6,5 +6,4 @@ interface Command<T> {
     val command: String
     val description: String
     fun run(device: IDevice): T
-
 }
