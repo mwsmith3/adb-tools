@@ -3,7 +3,7 @@ package com.github.mwsmith3.adbtools.actions.app
 import com.github.mwsmith3.adbtools.actions.AdbAction
 import com.github.mwsmith3.adbtools.command.CommandRunner
 import com.github.mwsmith3.adbtools.command.OpenDeepLinkCommand
-import com.github.mwsmith3.adbtools.window.AdbToolWindowPanel.Companion.DEEP_LINK_KEY
+import com.github.mwsmith3.adbtools.window.AdbToolsWindowView.Companion.DEEP_LINK_KEY
 import com.intellij.openapi.actionSystem.AnActionEvent
 
 class OpenDeepLinkAction : AdbAction() {

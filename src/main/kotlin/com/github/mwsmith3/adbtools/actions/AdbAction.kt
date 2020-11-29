@@ -1,19 +1,15 @@
 package com.github.mwsmith3.adbtools.actions
 
 import com.android.tools.idea.gradle.project.model.AndroidModuleModel
-import com.android.tools.idea.run.activity.ActivityLocator
 import com.github.mwsmith3.adbtools.adb.AdbExecutorService
-import com.github.mwsmith3.adbtools.command.CommandRunner
-import com.github.mwsmith3.adbtools.command.app.StartPackageCommand
-import com.github.mwsmith3.adbtools.util.NotificationHelper
-import com.github.mwsmith3.adbtools.util.getDefaultActivityName
-import com.github.mwsmith3.adbtools.window.AdbToolWindowPanel.Companion.DEVICE_KEY
-import com.github.mwsmith3.adbtools.window.AdbToolWindowPanel.Companion.FACET_KEY
+import com.github.mwsmith3.adbtools.window.AdbToolsWindowView.Companion.DEVICE_KEY
+import com.github.mwsmith3.adbtools.window.AdbToolsWindowView.Companion.FACET_KEY
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.project.Project
 
 abstract class AdbAction : AnAction() {
+    // TODO create app subclass that requires facet not to be null
 
     override fun update(e: AnActionEvent) {
         super.update(e)

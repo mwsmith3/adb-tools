@@ -1,35 +1,22 @@
 package com.github.mwsmith3.adbtools.window
 
-import com.android.ddmlib.IDevice
 import com.android.tools.idea.run.ConnectedAndroidDevice
-import com.github.mwsmith3.adbtools.device.DeviceProviderService
 import com.intellij.openapi.project.Project
-import com.intellij.ui.CollectionComboBoxModel
-import com.intellij.ui.MutableCollectionComboBoxModel
 import org.jetbrains.android.facet.AndroidFacet
 import org.jetbrains.android.util.AndroidUtils
 
-class AdbToolsModel(private val project: Project) : DeviceProviderService.DeviceChangeListener {
-
-    private val _deviceComboModel = MutableCollectionComboBoxModel<ConnectedAndroidDevice>()
-    val deviceComboModel: CollectionComboBoxModel<ConnectedAndroidDevice> = _deviceComboModel
-
-    private val _facetComboModel = MutableCollectionComboBoxModel<AndroidFacet>()
-    val facetComboModel: CollectionComboBoxModel<AndroidFacet> = _facetComboModel
+class AdbToolsModel(private val project: Project) {
 
     private val stateListeners = mutableListOf<StateListener>()
+    private val devices = mutableListOf<ConnectedAndroidDevice>()
+    private val facets = mutableListOf<AndroidFacet>()
 
     interface StateListener {
-        fun onDeviceConnected()
-        fun onNoDevicesConnected()
-    }
-
-    init {
-        val facets = AndroidUtils.getApplicationFacets(project)
-        if (facets.isNotEmpty()) {
-            facetComboModel.add(facets)
-            facetComboModel.selectedItem = facets[0]
-        }
+        fun deviceAdded(device: ConnectedAndroidDevice)
+        fun deviceRemoved(device: ConnectedAndroidDevice)
+        fun deviceUpdated(device: ConnectedAndroidDevice)
+        fun devicesCleared()
+        fun facetsSet(facets: List<AndroidFacet>)
     }
 
     fun addStateListener(listener: StateListener) {
@@ -40,30 +27,38 @@ class AdbToolsModel(private val project: Project) : DeviceProviderService.Device
         stateListeners.remove(listener)
     }
 
-    fun getSelectedDevice(): IDevice? {
-        return _deviceComboModel.selected?.device
-    }
-
-    override fun deviceAdded(device: ConnectedAndroidDevice) {
-        _deviceComboModel.addItem(device)
-        _deviceComboModel.selectedItem = device
-        if (_deviceComboModel.size == 1) {
-            stateListeners.forEach {
-                it.onDeviceConnected()
-            }
+    fun addDevice(device: ConnectedAndroidDevice) {
+        devices.add(device)
+        stateListeners.forEach {
+            it.deviceAdded(device)
         }
     }
 
-    override fun deviceRemoved(device: ConnectedAndroidDevice) {
-        _deviceComboModel.remove(device)
-        if (_deviceComboModel.size == 0) {
-            stateListeners.forEach {
-                it.onNoDevicesConnected()
-            }
+    fun removeDevice(device: ConnectedAndroidDevice) {
+        devices.remove(device)
+        stateListeners.forEach {
+            it.deviceRemoved(device)
         }
     }
 
-    override fun deviceChanged(device: ConnectedAndroidDevice) {
-        _deviceComboModel.contentsChanged(device)
+    fun updateDevice(device: ConnectedAndroidDevice) {
+        stateListeners.forEach {
+            it.deviceUpdated(device)
+        }
+    }
+
+    fun clearDevices() {
+        devices.clear()
+        stateListeners.forEach {
+            it.devicesCleared()
+        }
+    }
+
+    fun setFacets(facets: List<AndroidFacet>) {
+        this.facets.clear()
+        this.facets.addAll(facets)
+        stateListeners.forEach {
+            it.facetsSet(this.facets)
+        }
     }
 }

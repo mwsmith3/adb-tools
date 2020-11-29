@@ -9,17 +9,17 @@
     <!-- https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html -->
     <depends>com.intellij.modules.platform</depends>
     <depends>org.jetbrains.android</depends>
-<!--    <depends>com.intellij.modules.androidstudio</depends>-->
 
     <extensions defaultExtensionNs="com.intellij">
-        <projectService serviceImplementation="com.github.mwsmith3.adbtools.device.DeviceProviderService"/>
+        <projectService serviceInterface="com.github.mwsmith3.adbtools.device.DeviceProviderService"
+                        serviceImplementation="com.github.mwsmith3.adbtools.device.DeviceProviderServiceImpl"/>
         <projectService serviceImplementation="com.github.mwsmith3.adbtools.adb.AdbExecutorService"/>
         <toolWindow
                 id="Android Debug Bridge Tools"
                 icon="AllIcons.Toolwindows.ToolWindowBuild"
                 anchor="left"
                 secondary="true"
-                factoryClass="com.github.mwsmith3.adbtools.window.AdbToolWindowFactory"/>
+                factoryClass="com.github.mwsmith3.adbtools.window.AdbToolsWindowFactory"/>
     </extensions>
 
     <actions>
