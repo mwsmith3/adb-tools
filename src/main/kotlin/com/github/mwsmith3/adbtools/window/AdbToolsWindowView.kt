@@ -45,15 +45,18 @@ class AdbToolsWindowView(private val project: Project, private val model: AdbToo
                 deviceComboModel.selected
             }, {
                 deviceComboModel.selectedItem = it
-            }, deviceListCellRenderer).constraints(CCFlags.growX).component
+            }, deviceListCellRenderer).constraints(growX)
+        }
+        row {
             comboBox(facetComboModel, {
                 facetComboModel.selected
             }, {
                 facetComboModel.selectedItem = it
-            }, facetListCellRenderer).constraints(CCFlags.growX)
+            }, facetListCellRenderer).constraints(growX)
         }
         row {
-            debuggerCheckBox = checkBox("Attach debugger", false).component
+            cell { label("") }
+            debuggerCheckBox = checkBox("Attach debugger", false).constraints(growX, pushX).component
         }
 
 //            buttonFromAction("DL", ActionPlaces.TOOLBAR, openDeepLinkAction)
