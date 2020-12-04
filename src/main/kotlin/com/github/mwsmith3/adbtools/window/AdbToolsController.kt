@@ -2,6 +2,7 @@ package com.github.mwsmith3.adbtools.window
 
 import com.android.ddmlib.AndroidDebugBridge
 import com.android.tools.idea.run.ConnectedAndroidDevice
+import com.github.mwsmith3.adbtools.deeplinks.DeepLinkParser
 import com.github.mwsmith3.adbtools.device.DeviceProviderService
 import com.github.mwsmith3.adbtools.device.DeviceProviderServiceListener
 import com.google.common.util.concurrent.FutureCallback
@@ -9,6 +10,7 @@ import com.google.common.util.concurrent.Futures
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.project.Project
 import com.intellij.util.concurrency.EdtExecutorService
+import org.jetbrains.android.facet.AndroidFacet
 import org.jetbrains.android.util.AndroidUtils
 
 class AdbToolsController(private val project: Project,
@@ -19,6 +21,7 @@ class AdbToolsController(private val project: Project,
     private val edtExecutor = EdtExecutorService.getInstance()
 
     fun setup() {
+        view.addListener(ViewListener())
         model.setFacets(getFacets())
         deviceProviderService.addDeviceProviderServiceListener(ServiceListener())
         Futures.addCallback(deviceProviderService.start(), AdbStartHandler(), edtExecutor)
@@ -34,6 +37,12 @@ class AdbToolsController(private val project: Project,
         devices.forEach {
             model.addDevice(it)
         }
+    }
+
+    private fun getDeepLinks(facet: AndroidFacet?): List<String> {
+        val dl = facet?.let { DeepLinkParser.getDeepLinks(it) } ?: emptyList()
+        Logger.getInstance(AdbToolsController::class.java).info("$dl")
+        return dl.map { it.link }
     }
 
     private inner class ServiceListener : DeviceProviderServiceListener {
@@ -62,6 +71,13 @@ class AdbToolsController(private val project: Project,
 
         override fun onFailure(error: Throwable) {
             Logger.getInstance(AdbToolsController::class.java).info("Unable to get bridge: ${error.message}")
+        }
+    }
+
+    private inner class ViewListener : AdbToolsWindowViewListener {
+        override fun onFacetSelected(facet: AndroidFacet?) {
+            val deepLinks = getDeepLinks(facet)
+            model.setDeepLinks(deepLinks)
         }
     }
 }

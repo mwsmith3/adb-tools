@@ -1,6 +1,7 @@
 package com.github.mwsmith3.adbtools.window
 
 import com.android.tools.idea.run.ConnectedAndroidDevice
+import com.github.mwsmith3.adbtools.deeplinks.DeepLink
 import com.intellij.openapi.project.Project
 import org.jetbrains.android.facet.AndroidFacet
 import org.jetbrains.android.util.AndroidUtils
@@ -10,6 +11,7 @@ class AdbToolsModel(private val project: Project) {
     private val stateListeners = mutableListOf<StateListener>()
     private val devices = mutableListOf<ConnectedAndroidDevice>()
     private val facets = mutableListOf<AndroidFacet>()
+    private val deepLinks = mutableListOf<String>()
 
     interface StateListener {
         fun deviceAdded(device: ConnectedAndroidDevice)
@@ -17,6 +19,7 @@ class AdbToolsModel(private val project: Project) {
         fun deviceUpdated(device: ConnectedAndroidDevice)
         fun devicesCleared()
         fun facetsSet(facets: List<AndroidFacet>)
+        fun deepLinksSet(deepLinks: List<String>)
     }
 
     fun addStateListener(listener: StateListener) {
@@ -59,6 +62,14 @@ class AdbToolsModel(private val project: Project) {
         this.facets.addAll(facets)
         stateListeners.forEach {
             it.facetsSet(this.facets)
+        }
+    }
+
+    fun setDeepLinks(deepLinks: List<String>) {
+        this.deepLinks.clear()
+        this.deepLinks.addAll(deepLinks)
+        stateListeners.forEach {
+            it.deepLinksSet(deepLinks)
         }
     }
 }

@@ -3,8 +3,6 @@
     <name>ADB Tools</name>
     <vendor>Matthew Smith</vendor>
 
-    // TODO check facets setup
-
     <!-- Product and plugin compatibility requirements -->
     <!-- https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html -->
     <depends>com.intellij.modules.platform</depends>

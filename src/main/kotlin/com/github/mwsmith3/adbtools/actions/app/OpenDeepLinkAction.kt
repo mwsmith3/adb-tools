@@ -11,8 +11,9 @@ class OpenDeepLinkAction : AdbAction() {
         val device = getDevice(event)
         val deepLink = event.getData(DEEP_LINK_KEY)
         val project = event.project
-        if (device != null && deepLink != null && project != null) {
-            execute(project) { CommandRunner.run(device, OpenDeepLinkCommand(project, deepLink)) }
+        val packageName = getPackageName(event)
+        if (device != null && deepLink != null && project != null && packageName != null) {
+            execute(project) { CommandRunner.run(device, OpenDeepLinkCommand(project, packageName, deepLink)) }
         }
     }
 }
