@@ -15,6 +15,6 @@ object GetTalkBackEnabledCommand : Command<Boolean> {
     override fun run(device: IDevice): Boolean {
         val receiver = GenericReceiver()
         device.executeShellCommand(command, receiver, 15L, TimeUnit.SECONDS)
-        return receiver.adbOutputLines[0] == talkBackSetting
+        return receiver.shellOutput[0] == talkBackSetting
     }
 }

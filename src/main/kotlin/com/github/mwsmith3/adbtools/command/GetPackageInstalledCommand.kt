@@ -2,7 +2,6 @@ package com.github.mwsmith3.adbtools.command
 
 import com.android.ddmlib.IDevice
 import com.github.mwsmith3.adbtools.adb.GenericReceiver
-import com.github.mwsmith3.adbtools.command.Command
 import java.util.concurrent.TimeUnit
 
 class GetPackageInstalledCommand(private val packageName: String) : Command<Boolean> {
@@ -14,6 +13,6 @@ class GetPackageInstalledCommand(private val packageName: String) : Command<Bool
     override fun run(device: IDevice): Boolean {
         val receiver = GenericReceiver()
         device.executeShellCommand("pm list packages $packageName", receiver, 15L, TimeUnit.SECONDS)
-        return receiver.adbOutputLines.contains("package:$packageName")
+        return receiver.shellOutput.contains("package:$packageName")
     }
 }
