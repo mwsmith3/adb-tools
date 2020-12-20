@@ -7,7 +7,6 @@
     <!-- https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html -->
     <depends>com.intellij.modules.platform</depends>
     <depends>org.jetbrains.android</depends>
-    <depends>com.intellij.modules.androidstudio</depends>
 
     <extensions defaultExtensionNs="com.intellij">
         <projectService serviceInterface="com.github.mwsmith3.adbtools.device.DeviceProviderService"
@@ -43,6 +42,10 @@
                     class="com.github.mwsmith3.adbtools.actions.app.ClearDataAndRestartAction" text="Clear Data And Restart"
                     description="Clear data and restart"
                     icon="AdbToolsIcons.ClearDataIcon" />
+            <action id="com.github.mwsmith3.adbtools.deeplink" text="Open DeepLink"
+                    class="com.github.mwsmith3.adbtools.actions.app.OpenDeepLinkAction"
+                    description="Open a deep link"
+                    icon="AdbToolsIcons.DeepLink" />
             <separator/>
             <action id="com.github.mwsmith3.adbtools.actions.settings.EnableDeveloperOptionsAction"
                     class="com.github.mwsmith3.adbtools.actions.settings.EnableDeveloperOptionsAction" text="Enable Developer Options"
@@ -61,10 +64,5 @@
                     description="Set animation scales"
                     icon="AllIcons.Process.Step_1" />
         </group>
-
-        <action id="com.github.mwsmith3.adbtools.deeplink" text="Open DeepLink"
-                class="com.github.mwsmith3.adbtools.actions.app.OpenDeepLinkAction"
-                description="Open a deep link"
-                icon="AdbToolsIcons.AccessibilityIcon" />
     </actions>
 </idea-plugin>

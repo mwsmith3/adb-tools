@@ -5,6 +5,8 @@ import org.jetbrains.android.dom.AndroidDomUtil
 import org.jetbrains.android.dom.manifest.Data
 import org.jetbrains.android.dom.manifest.Manifest
 import org.jetbrains.android.facet.AndroidFacet
+import com.intellij.openapi.diagnostic.Logger
+import org.jetbrains.android.util.AndroidResourceUtil
 
 object DeepLinkParser {
 
@@ -21,15 +23,20 @@ object DeepLinkParser {
                     AndroidDomUtil.containsCategory(it, "android.intent.category.BROWSABLE")
         }
         return deepLinkIntentFilters.flatMap {
-            getDeepLinksFromData(manifest, it.dataElements)
+            getDeepLinksFromData(manifest, facet, it.dataElements)
         }
     }
 
-    private fun getDeepLinksFromData(manifest: Manifest, data: List<Data>): List<DeepLink> {
+    private fun getDeepLinksFromData(manifest: Manifest, facet: AndroidFacet, data: List<Data>): List<DeepLink> {
         // TODO it should work according to this https://developer.android.com/guide/topics/manifest/data-element
-        val schemes = getSchemes(manifest, data)
-        val hosts = getHosts(manifest, data)
-        val paths = getPaths(manifest, data)
+        val schemes = getSchemes(manifest, facet, data)
+        val hosts = getHosts(manifest, facet, data)
+        val paths = getPaths(manifest, facet, data)
+
+        Logger.getInstance(GetAndroidStrings::class.java).info("getDeepLinksFromData schemes: $schemes")
+        Logger.getInstance(GetAndroidStrings::class.java).info("getDeepLinksFromData hosts: $hosts")
+        Logger.getInstance(GetAndroidStrings::class.java).info("getDeepLinksFromData paths: $paths")
+
         val links = mutableListOf<DeepLink>()
         schemes.forEach { scheme ->
             hosts.forEach { host ->
@@ -41,52 +48,35 @@ object DeepLinkParser {
         return links
     }
 
-    private fun getSchemes(manifest: Manifest, data: List<Data>): List<String> {
-        val attributeValues = getXmlAttributeValuesWithName("android:scheme", data)
-        return attributeValues.flatMap {
-            it.resolveResource(manifest)
+    private fun getSchemes(manifest: Manifest, facet: AndroidFacet, data: List<Data>): List<String> {
+        val attributeValues = getXmlAttributeValuesWithName("android:scheme", data = data)
+        return attributeValues.mapNotNull {
+            GetAndroidStrings.resolveAttribute(manifest, facet, it)
         }
     }
 
-
-    private fun getHosts(manifest: Manifest, data: List<Data>): List<String> {
-        val attributeValues = getXmlAttributeValuesWithName("android:host", data)
-        return attributeValues.flatMap {
-            it.resolveResource(manifest)
+    private fun getHosts(manifest: Manifest, facet: AndroidFacet, data: List<Data>): List<String> {
+        val attributeValues = getXmlAttributeValuesWithName("android:host", data = data)
+        return attributeValues.mapNotNull {
+            GetAndroidStrings.resolveAttribute(manifest, facet, it)
         }
     }
 
-    private fun getPaths(manifest: Manifest, data: List<Data>): List<String> {
+    private fun getPaths(manifest: Manifest, facet: AndroidFacet, data: List<Data>): List<String> {
         // TODO pathPrefix and the other thing
-        val attributeValues = getXmlAttributeValuesWithName("android.path", data)
-        return attributeValues.flatMap {
-            it.resolveResource(manifest)
+        val attributeValues = getXmlAttributeValuesWithName("android:path", "android:pathPattern", "android:pathPrefix", data = data)
+        return attributeValues.mapNotNull {
+            GetAndroidStrings.resolveAttribute(manifest, facet, it)
         }
-
     }
 
-    private fun getXmlAttributeValuesWithName(name: String, data: List<Data>): List<String> {
+    private fun getXmlAttributeValuesWithName(vararg names: String, data: List<Data>): List<String> {
         return data.flatMap {
-            it.xmlTag?.attributes?.toList()?.filter { attribute -> attribute.name == name }.orEmpty().mapNotNull { attribute -> attribute.value }
+            it.xmlTag?.attributes?.toList()?.filter { attribute -> names.contains(attribute.name) }.orEmpty().mapNotNull { attribute -> attribute.value }
         }
-    }
-}
-
-fun String.resolveResource(manifest: Manifest): List<String> {
-    // TODO use AndroidDomUtil.getResourceReferenceConverter()
-//    val r = AndroidDomUtil.getResourceReferenceConverter()
-//    r.
-//    AndroidDomUtil.getAndroidResourceReference()
-    return if (this.startsWith("@string/")) {
-        GetAndroidStrings.getValues(manifest, this)
-    } else {
-        listOf(this)
     }
 }
 
 data class DeepLink(val scheme: String, val host: String, val path: String?) {
     val link = "${scheme}://${host}${path ?: ""}"
 }
-
-data class DeepLinkDataAttributes(val facet: AndroidFacet, val packageName: String, val data: List<Data>)
-data class DeepLinkData(val deepLink: DeepLink, val attachDebugger: Boolean, val param: String, val value: String)
