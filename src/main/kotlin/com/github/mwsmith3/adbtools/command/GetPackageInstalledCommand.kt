@@ -8,7 +8,7 @@ class GetPackageInstalledCommand(private val packageName: String) : Command<Bool
     override val command: String
         get() = "pm list packages $packageName"
     override val description: String
-        get() = "TalkBack installed check"
+        get() = "Get Package Installed"
 
     override fun run(device: IDevice): Boolean {
         val receiver = GenericReceiver()

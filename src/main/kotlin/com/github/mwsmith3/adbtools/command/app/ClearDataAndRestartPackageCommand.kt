@@ -1,6 +1,6 @@
 package com.github.mwsmith3.adbtools.command.app
 
-import com.github.mwsmith3.adbtools.command.DebuggableCommand
+import com.github.mwsmith3.adbtools.command.StartForResultCommand
 import com.intellij.openapi.project.Project
 
 class ClearDataAndRestartPackageCommand(
@@ -8,7 +8,7 @@ class ClearDataAndRestartPackageCommand(
         packageName: String,
         project: Project,
         private val activityName: String) :
-        DebuggableCommand(attachDebugger, packageName, project) {
+        StartForResultCommand(attachDebugger, packageName, project) {
     override val command: String
         get() = "pm clear $packageName && am start $packageName/$activityName"
     override val description: String

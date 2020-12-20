@@ -9,7 +9,6 @@ import kotlinx.coroutines.runBlocking
 import java.io.IOException
 
 object CommandRunner {
-    // TODO check generics
 
     @Throws(TimeoutException::class, AdbCommandRejectedException::class, ShellCommandUnresponsiveException::class, IOException::class)
     fun <T> run(device: IDevice, command: Command<T>): T {

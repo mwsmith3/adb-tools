@@ -3,7 +3,8 @@ package com.github.mwsmith3.adbtools.actions.app
 import com.android.tools.idea.run.activity.ActivityLocator
 import com.github.mwsmith3.adbtools.actions.AdbAction
 import com.github.mwsmith3.adbtools.command.CommandRunner
-import com.github.mwsmith3.adbtools.command.GetPackageInstalledCommand
+import com.github.mwsmith3.adbtools.command.Result
+import com.github.mwsmith3.adbtools.command.app.ClearDataAndRestartPackageCommand
 import com.github.mwsmith3.adbtools.command.app.StartPackageCommand
 import com.github.mwsmith3.adbtools.util.NotificationHelper
 import com.github.mwsmith3.adbtools.util.getDefaultActivityName
@@ -11,25 +12,29 @@ import com.intellij.openapi.actionSystem.AnActionEvent
 
 class StartDefaultActivityAction : AdbAction() {
     override fun actionPerformed(event: AnActionEvent) {
-        val device = getDevice(event)
-        val project = event.project
-        val facet = getFacet(event)
-        val packageName = getPackageName(event)
+        val device = getDevice(event) ?: return
+        val project = event.project ?: return
+        val packageName = getPackageName(event) ?: return
+        val facet = getFacet(event) ?: return
 
-        if (project != null && device != null && facet != null && packageName != null) {
+        try {
+            val activityName = getDefaultActivityName(facet, device)
             execute(project) {
-                val packageInstalled = CommandRunner.run(device, GetPackageInstalledCommand(packageName))
-                if (packageInstalled) {
-                    try {
-                        val defaultActivityName = getDefaultActivityName(facet, device)
-                        CommandRunner.run(device, StartPackageCommand(getAttachDebugger(event), packageName, project, defaultActivityName))
-                    } catch (e: ActivityLocator.ActivityLocatorException) {
-                        NotificationHelper.error("Unable to start default activity on ${device.name}: ${e.message}")
-                    }
-                } else {
-                    NotificationHelper.error("Package $packageName not installed on device $device")
+                val result = CommandRunner.run(
+                    device,
+                    StartPackageCommand(
+                        getAttachDebugger(event),
+                        packageName,
+                        project,
+                        activityName
+                    )
+                )
+                if (result is Result.Error) {
+                    NotificationHelper.error("Unable to start Activity: \n\n${result.message}")
                 }
             }
+        } catch (e: ActivityLocator.ActivityLocatorException) {
+            NotificationHelper.error("Unable to locate default activity for package $packageName")
         }
     }
 }
