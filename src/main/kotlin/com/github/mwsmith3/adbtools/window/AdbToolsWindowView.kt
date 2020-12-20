@@ -67,6 +67,7 @@ class AdbToolsWindowView(private val project: Project, private val model: AdbToo
         }
         row {
             debuggerCheckBox = checkBox("Attach debugger", false).constraints(growX, pushX).component
+            debuggerCheckBox.isEnabled = false
         }
     }
 
