@@ -19,7 +19,7 @@ abstract class StartForResultCommand(
             Debugger(project, device, packageName).attach()
         }
 
-        val isError = receiver.shellOutput.find { it.contains(Regex("(?i)(error)")) } != null
+        val isError = receiver.shellOutput.find { it.contains(Regex("(?i)(error)")) || it.contains(Regex("(?i)fail")) } != null
         return if (isError) {
             Result.Error(receiver.shellOutput.joinToString(separator = "\n") {
                 it

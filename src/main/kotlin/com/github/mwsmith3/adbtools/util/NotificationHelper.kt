@@ -18,6 +18,8 @@ object NotificationHelper {
 
     fun error(message: String) = sendNotification(message, NotificationType.ERROR, ERRORS)
 
+    fun commandError(message: String) = sendNotification("adb command executed with errors: \n\n$message", NotificationType.ERROR, ERRORS)
+
     fun confirmAction(project: Project, title: String, message: String, actionDescription: String, runnable: Runnable) {
         val notification = STICKY.createNotification(title, message, NotificationType.WARNING)
         val notificationAction = NotificationAction.createSimple(actionDescription) {
