@@ -22,9 +22,7 @@ class ClearDataAndRestartAction : AdbAction() {
                 val result = CommandRunner.run(
                     device,
                     ClearDataAndRestartPackageCommand(
-                        getAttachDebugger(event),
                         packageName,
-                        project,
                         activityName
                     )
                 )

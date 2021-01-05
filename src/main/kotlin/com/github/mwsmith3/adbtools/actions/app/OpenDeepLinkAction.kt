@@ -19,7 +19,7 @@ class OpenDeepLinkAction : AdbAction() {
         execute(project) {
             val result = CommandRunner.run(
                 device,
-                OpenDeepLinkCommand(getAttachDebugger(event), packageName, project, deepLink)
+                OpenDeepLinkCommand(packageName, deepLink)
             )
             if (result is Result.Error) {
                 NotificationHelper.error("Unable to start deep link: \n\n${result.message}")

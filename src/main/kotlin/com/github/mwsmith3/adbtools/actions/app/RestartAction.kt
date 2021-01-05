@@ -21,7 +21,7 @@ class RestartAction : AdbAction() {
                 val activityName = getDefaultActivityName(facet, device)
                 val result = CommandRunner.run(
                     device,
-                    RestartPackageCommand(getAttachDebugger(event), packageName, project, activityName)
+                    RestartPackageCommand(packageName, activityName)
                 )
                 if (result is Result.Error) {
                     NotificationHelper.error("Unable to start Activity: \n\n${result.message}")

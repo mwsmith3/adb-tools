@@ -26,8 +26,9 @@ object GetAndroidStrings {
         val resourceName = getStringResourceName(manifest, resourceReference)
         Logger.getInstance(GetAndroidStrings::class.java).info("lookUpStringResource resourceName: $resourceName")
         return resourceName?.let {
-            ResourceRepositoryManager.getProjectResources(facet).getResources(ResourceNamespace.RES_AUTO, ResourceType.STRING)
-                    .get(it)[0].resourceValue.rawXmlValue
+            ResourceRepositoryManager.getProjectResources(facet)
+                .getResources(ResourceNamespace.RES_AUTO, ResourceType.STRING)
+                .get(it)[0].resourceValue.rawXmlValue
         }
     }
 
@@ -39,8 +40,10 @@ object GetAndroidStrings {
             "$it" == resourceReference
         }
         Logger.getInstance(GetAndroidStrings::class.java).info("getStringResourceName variants: $variants")
-        Logger.getInstance(GetAndroidStrings::class.java).info("getStringResourceName resourceRefernce: $resourceReference")
-        Logger.getInstance(GetAndroidStrings::class.java).info("getStringResourceName getStringResourceValue: $resourceValue")
+        Logger.getInstance(GetAndroidStrings::class.java)
+            .info("getStringResourceName resourceRefernce: $resourceReference")
+        Logger.getInstance(GetAndroidStrings::class.java)
+            .info("getStringResourceName getStringResourceValue: $resourceValue")
         return resourceValue?.resourceName
     }
 }

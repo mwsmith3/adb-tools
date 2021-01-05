@@ -65,10 +65,10 @@ class AdbToolsWindowView(private val project: Project, private val model: AdbToo
                 paramsTextField(growX, pushX).component.toolTipText = "Deep link query parameters"
             }
         }
-        row {
-            debuggerCheckBox = checkBox("Attach debugger", false).constraints(growX, pushX).component
-            debuggerCheckBox.isEnabled = false
-        }
+//        row {
+//            debuggerCheckBox = checkBox("Attach debugger", false).constraints(growX, pushX).component
+//            debuggerCheckBox.isEnabled = false
+//        }
     }
 
     private val noDevicesContent = panel(LCFlags.fill) {
@@ -128,7 +128,7 @@ class AdbToolsWindowView(private val project: Project, private val model: AdbToo
         return when {
             DEVICE_KEY.`is`(dataId) -> deviceComboModel.selected?.device
             FACET_KEY.`is`(dataId) -> facetComboModel.selected
-            DEBUGGER_KEY.`is`(dataId) -> debuggerCheckBox.isSelected
+//            DEBUGGER_KEY.`is`(dataId) -> debuggerCheckBox.isSelected
             DEEP_LINK_KEY.`is`(dataId) -> getSelectedDeepLink()
             else -> super.getData(dataId)
         }
@@ -178,14 +178,16 @@ class AdbToolsWindowView(private val project: Project, private val model: AdbToo
                 setContent(false)
             }
         }
-        override fun contentsChanged(e: ListDataEvent) { }
+        override fun contentsChanged(e: ListDataEvent) {
+            // do nothing
+        }
     }
 
     companion object {
         val DEVICE_KEY = DataKey.create<IDevice>("device")
         val DEEP_LINK_KEY = DataKey.create<String>("deep link")
         val FACET_KEY = DataKey.create<AndroidFacet>("android facet")
-        val DEBUGGER_KEY = DataKey.create<Boolean>("attach debugger")
+//        val DEBUGGER_KEY = DataKey.create<Boolean>("attach debugger")
     }
 }
 

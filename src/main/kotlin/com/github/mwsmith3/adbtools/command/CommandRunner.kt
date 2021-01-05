@@ -8,6 +8,7 @@ import com.github.mwsmith3.adbtools.util.NotificationHelper
 import kotlinx.coroutines.runBlocking
 import java.io.IOException
 
+@Suppress("TooGenericExceptionCaught", "ComplexCondition")
 object CommandRunner {
 
     @Throws(TimeoutException::class, AdbCommandRejectedException::class, ShellCommandUnresponsiveException::class, IOException::class)
