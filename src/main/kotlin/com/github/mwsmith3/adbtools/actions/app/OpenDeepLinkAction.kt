@@ -22,7 +22,7 @@ class OpenDeepLinkAction : AdbAction() {
                 OpenDeepLinkCommand(packageName, deepLink)
             )
             if (result is Result.Error) {
-                NotificationHelper.error("Unable to start deep link: \n\n${result.message}")
+                NotificationHelper.commandError(result.message)
             }
         }
     }

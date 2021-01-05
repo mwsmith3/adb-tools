@@ -24,7 +24,7 @@ class RestartAction : AdbAction() {
                     RestartPackageCommand(packageName, activityName)
                 )
                 if (result is Result.Error) {
-                    NotificationHelper.error("Unable to start Activity: \n\n${result.message}")
+                    NotificationHelper.commandError(result.message)
                 }
             } catch (e: ActivityLocator.ActivityLocatorException) {
                 NotificationHelper.error("Unable to locate default activity for package $packageName")

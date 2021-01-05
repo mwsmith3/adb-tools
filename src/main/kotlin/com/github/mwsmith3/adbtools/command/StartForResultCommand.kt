@@ -12,7 +12,7 @@ abstract class StartForResultCommand(
         val receiver = GenericReceiver()
         device.executeShellCommand(command, receiver, 15L, TimeUnit.SECONDS)
 
-        val isError = receiver.shellOutput.find { it.contains(Regex("(?i)(error)")) } != null
+        val isError = receiver.shellOutput.find { it.contains(Regex("(?i)(error)")) || it.contains(Regex("(?i)fail")) } != null
         return if (isError) {
             Result.Error(receiver.shellOutput.joinToString(separator = "\n") {
                 it

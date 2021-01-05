@@ -27,7 +27,7 @@ class ClearDataAndRestartAction : AdbAction() {
                     )
                 )
                 if (result is Result.Error) {
-                    NotificationHelper.error("Unable to start activity: \n\n${result.message}")
+                    NotificationHelper.commandError(result.message)
                 }
             }
         } catch (e: ActivityLocator.ActivityLocatorException) {

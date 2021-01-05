@@ -27,7 +27,7 @@ class StartDefaultActivityAction : AdbAction() {
                     )
                 )
                 if (result is Result.Error) {
-                    NotificationHelper.error("Unable to start Activity: \n\n${result.message}")
+                    NotificationHelper.commandError(result.message)
                 }
             }
         } catch (e: ActivityLocator.ActivityLocatorException) {
