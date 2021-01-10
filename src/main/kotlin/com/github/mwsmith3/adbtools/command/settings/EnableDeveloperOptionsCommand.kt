@@ -3,6 +3,7 @@ package com.github.mwsmith3.adbtools.command.settings
 import com.android.ddmlib.IDevice
 import com.github.mwsmith3.adbtools.adb.GenericReceiver
 import com.github.mwsmith3.adbtools.command.Command
+import com.github.mwsmith3.adbtools.command.Command.Companion.TIMEOUT
 import java.util.concurrent.TimeUnit
 
 object EnableDeveloperOptionsCommand : Command<Unit> {
@@ -14,6 +15,6 @@ object EnableDeveloperOptionsCommand : Command<Unit> {
         get() = "Enable developer options"
 
     override fun run(device: IDevice) {
-        device.executeShellCommand(command, GenericReceiver(), 15L, TimeUnit.SECONDS)
+        device.executeShellCommand(command, GenericReceiver(), TIMEOUT, TimeUnit.SECONDS)
     }
 }

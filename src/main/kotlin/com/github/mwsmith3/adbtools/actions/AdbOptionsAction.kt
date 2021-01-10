@@ -13,12 +13,12 @@ abstract class AdbOptionsAction : AdbAction() {
 
         if (component != null) {
             JBPopupFactory.getInstance().createPopupChooserBuilder(
-                    options
+                options
             ).setItemChosenCallback {
                 onOptionChosen(it)
             }
-                    .setTitle(title)
-                    .createPopup().showInScreenCoordinates(component, point)
+                .setTitle(title)
+                .createPopup().showInScreenCoordinates(component, point)
         }
     }
 }

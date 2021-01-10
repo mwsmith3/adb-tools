@@ -10,6 +10,8 @@ import com.github.mwsmith3.adbtools.util.getDefaultActivityName
 import com.intellij.openapi.actionSystem.AnActionEvent
 
 class RestartAction : AdbAction() {
+
+    @Suppress("ReturnCount")
     override fun actionPerformed(event: AnActionEvent) {
         val device = getDevice(event) ?: return
         val project = event.project ?: return

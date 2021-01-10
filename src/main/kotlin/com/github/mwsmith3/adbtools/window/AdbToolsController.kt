@@ -13,11 +13,9 @@ import com.intellij.util.concurrency.EdtExecutorService
 import org.jetbrains.android.facet.AndroidFacet
 import org.jetbrains.android.util.AndroidUtils
 
-class AdbToolsController(private val project: Project,
-                         private val model: AdbToolsModel,
-                         private val view: AdbToolsWindowView,
-                         private val deviceProviderService: DeviceProviderService) {
+class AdbToolsController(val project: Project, val model: AdbToolsModel, private val view: AdbToolsWindowView) {
 
+    private val deviceProviderService = project.getService(DeviceProviderService::class.java)
     private val edtExecutor = EdtExecutorService.getInstance()
 
     fun setup() {

@@ -10,9 +10,11 @@ import org.jetbrains.android.facet.AndroidFacet
 @Throws(ActivityLocator.ActivityLocatorException::class)
 fun getDefaultActivityName(facet: AndroidFacet, device: IDevice): String {
     return ApplicationManager.getApplication()
-        .runReadAction(ThrowableComputable<String, ActivityLocator.ActivityLocatorException?> {
-            DefaultActivityLocator(
-                facet
-            ).getQualifiedActivityName(device)
-        })
+        .runReadAction(
+            ThrowableComputable<String, ActivityLocator.ActivityLocatorException?> {
+                DefaultActivityLocator(
+                    facet
+                ).getQualifiedActivityName(device)
+            }
+        )
 }

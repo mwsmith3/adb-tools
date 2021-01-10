@@ -10,7 +10,7 @@ import com.intellij.openapi.application.AppUIExecutor
 import com.intellij.openapi.application.impl.coroutineDispatchingContext
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.project.Project
-import kotlinx.coroutines.*
+import kotlinx.coroutines.launch
 import org.jetbrains.android.sdk.AndroidSdkUtils
 import java.io.File
 import kotlin.coroutines.CoroutineContext
@@ -39,9 +39,11 @@ class DeviceProviderServiceImpl(private val project: Project) : DeviceProviderSe
                 bridge = changedDebugBridge
                 devices.clear()
                 if (changedDebugBridge.hasInitialDeviceList()) {
-                    devices.addAll(changedDebugBridge.devices.map {
-                        ConnectedAndroidDevice(it, null)
-                    })
+                    devices.addAll(
+                        changedDebugBridge.devices.map {
+                            ConnectedAndroidDevice(it, null)
+                        }
+                    )
                 }
             }
         }

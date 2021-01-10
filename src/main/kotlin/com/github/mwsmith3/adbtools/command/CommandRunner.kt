@@ -11,7 +11,12 @@ import java.io.IOException
 @Suppress("TooGenericExceptionCaught", "ComplexCondition")
 object CommandRunner {
 
-    @Throws(TimeoutException::class, AdbCommandRejectedException::class, ShellCommandUnresponsiveException::class, IOException::class)
+    @Throws(
+        TimeoutException::class,
+        AdbCommandRejectedException::class,
+        ShellCommandUnresponsiveException::class,
+        IOException::class
+    )
     fun <T> run(device: IDevice, command: Command<T>): T {
         NotificationHelper.info("${device.name}: ${command.command}")
         return try {
@@ -19,7 +24,11 @@ object CommandRunner {
                 command.run(device)
             }
         } catch (e: Exception) {
-            if (e is TimeoutException || e is AdbCommandRejectedException || e is ShellCommandUnresponsiveException || e is IOException) {
+            if (e is TimeoutException ||
+                e is AdbCommandRejectedException ||
+                e is ShellCommandUnresponsiveException ||
+                e is IOException
+            ) {
                 NotificationHelper.error("${command.description} failed. (${e.message})")
             }
             throw e

@@ -20,13 +20,13 @@ sealed class AnimationScale {
         }
 
         val LIST = listOf(
-                Off,
-                On(0.5F),
-                On(1F),
-                On(1.5F),
-                On(2F),
-                On(5F),
-                On(10F),
+            Off,
+            On(0.5F),
+            On(1F),
+            On(1.5F),
+            On(2F),
+            On(5F),
+            On(10F),
         )
     }
 }

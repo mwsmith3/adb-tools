@@ -2,7 +2,11 @@ package com.github.mwsmith3.adbtools.window
 
 import com.android.ddmlib.IDevice
 import com.android.tools.idea.run.ConnectedAndroidDevice
-import com.intellij.openapi.actionSystem.*
+import com.intellij.openapi.actionSystem.ActionManager
+import com.intellij.openapi.actionSystem.ActionPlaces
+import com.intellij.openapi.actionSystem.ActionToolbar
+import com.intellij.openapi.actionSystem.DataKey
+import com.intellij.openapi.actionSystem.DefaultActionGroup
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.SimpleToolWindowPanel
 import com.intellij.ui.MutableCollectionComboBoxModel
@@ -20,7 +24,8 @@ import javax.swing.SwingConstants
 import javax.swing.event.ListDataEvent
 import javax.swing.event.ListDataListener
 
-class AdbToolsWindowView(private val project: Project, private val model: AdbToolsModel) : SimpleToolWindowPanel(true, false) {
+class AdbToolsWindowView(private val project: Project, private val model: AdbToolsModel) :
+    SimpleToolWindowPanel(true, false) {
 
     private val listeners = mutableListOf<AdbToolsWindowViewListener>()
     private val deviceComboModel = MutableCollectionComboBoxModel<ConnectedAndroidDevice>()
@@ -29,8 +34,9 @@ class AdbToolsWindowView(private val project: Project, private val model: AdbToo
     private lateinit var debuggerCheckBox: JCheckBox
     private val paramsTextField = JTextField("", 1)
 
-    private val deviceListCellRenderer = SimpleListCellRenderer.create<ConnectedAndroidDevice>("")
-    { it?.name?.replace(Regex("[]]|[\\[]|"), "")?.replace('_', ' ') }
+    private val deviceListCellRenderer = SimpleListCellRenderer.create<ConnectedAndroidDevice>("") {
+        it?.name?.replace(Regex("[]]|[\\[]|"), "")?.replace('_', ' ')
+    }
 
     private val facetListCellRenderer = SimpleListCellRenderer.create<AndroidFacet>("") {
         it.module.name
@@ -38,28 +44,44 @@ class AdbToolsWindowView(private val project: Project, private val model: AdbToo
 
     private val deviceConnectedContent = panel {
         row("Devices") {
-            comboBox(deviceComboModel, {
-                deviceComboModel.selected
-            }, {
-                deviceComboModel.selectedItem = it
-            }, deviceListCellRenderer).constraints(growX, pushX)
+            comboBox(
+                deviceComboModel,
+                {
+                    deviceComboModel.selected
+                },
+                {
+                    deviceComboModel.selectedItem = it
+                },
+                deviceListCellRenderer
+            ).constraints(growX, pushX)
         }
         row("Modules") {
-            comboBox(facetComboModel, {
-                facetComboModel.selected
-            }, { facet ->
-                facetComboModel.selectedItem = facet
-            }, facetListCellRenderer).constraints(growX, pushX).component.addActionListener { listeners.forEach {
-                it.onFacetSelected(facetComboModel.selected)
-            } }
+            comboBox(
+                facetComboModel,
+                {
+                    facetComboModel.selected
+                },
+                { facet ->
+                    facetComboModel.selectedItem = facet
+                },
+                facetListCellRenderer
+            ).constraints(growX, pushX).component.addActionListener {
+                listeners.forEach {
+                    it.onFacetSelected(facetComboModel.selected)
+                }
+            }
         }
         row("Deep links") {
             cell {
-                comboBox(deepLinkComboModel, {
-                    deepLinkComboModel.selected
-                }, {
-                    deepLinkComboModel.selectedItem = it
-                }).constraints(growX, pushX)
+                comboBox(
+                    deepLinkComboModel,
+                    {
+                        deepLinkComboModel.selected
+                    },
+                    {
+                        deepLinkComboModel.selectedItem = it
+                    }
+                ).constraints(growX, pushX)
             }
             cell {
                 paramsTextField(growX, pushX).component.toolTipText = "Deep link query parameters"
@@ -74,13 +96,13 @@ class AdbToolsWindowView(private val project: Project, private val model: AdbToo
     private val noDevicesContent = panel(LCFlags.fill) {
         row {
             val emptyLabel = label("No devices connected")
-                    .constraints(CCFlags.grow).component
+                .constraints(CCFlags.grow).component
             emptyLabel.icon = AndroidIcons.DeviceExplorer.DevicesLineup
             emptyLabel.horizontalAlignment = SwingConstants.CENTER
             emptyLabel.horizontalTextPosition = SwingConstants.CENTER
             emptyLabel.verticalAlignment = SwingConstants.CENTER
             emptyLabel.verticalTextPosition = SwingConstants.BOTTOM
-            emptyLabel.font = JBUI.Fonts.label(13f)
+            emptyLabel.font = JBUI.Fonts.label(NO_DEVICES_FONT_TEXT_SIZE)
             emptyLabel.foreground = UIUtil.getInactiveTextColor()
         }
     }
@@ -108,7 +130,6 @@ class AdbToolsWindowView(private val project: Project, private val model: AdbToo
         }
         setContent(content)
     }
-
 
     private fun getSelectedDeepLink(): String? {
         return deepLinkComboModel.selected?.let {
@@ -173,11 +194,13 @@ class AdbToolsWindowView(private val project: Project, private val model: AdbToo
                 setContent(true)
             }
         }
+
         override fun intervalRemoved(e: ListDataEvent) {
             if (e.index0 == 0) {
                 setContent(false)
             }
         }
+
         override fun contentsChanged(e: ListDataEvent) {
             // do nothing
         }
@@ -188,6 +211,7 @@ class AdbToolsWindowView(private val project: Project, private val model: AdbToo
         val DEEP_LINK_KEY = DataKey.create<String>("deep link")
         val FACET_KEY = DataKey.create<AndroidFacet>("android facet")
 //        val DEBUGGER_KEY = DataKey.create<Boolean>("attach debugger")
+
+        private const val NO_DEVICES_FONT_TEXT_SIZE = 13f
     }
 }
-

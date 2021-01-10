@@ -3,6 +3,7 @@ package com.github.mwsmith3.adbtools.command.settings
 import com.android.ddmlib.IDevice
 import com.github.mwsmith3.adbtools.adb.GenericReceiver
 import com.github.mwsmith3.adbtools.command.Command
+import com.github.mwsmith3.adbtools.command.Command.Companion.TIMEOUT
 import java.util.concurrent.TimeUnit
 
 class ChangeDisplaySettingsCommand(private val displaySetting: Display) : Command<Unit> {
@@ -16,6 +17,6 @@ class ChangeDisplaySettingsCommand(private val displaySetting: Display) : Comman
         get() = "Change display of device"
 
     override fun run(device: IDevice) {
-        device.executeShellCommand(command, GenericReceiver(), 15L, TimeUnit.SECONDS)
+        device.executeShellCommand(command, GenericReceiver(), TIMEOUT, TimeUnit.SECONDS)
     }
 }

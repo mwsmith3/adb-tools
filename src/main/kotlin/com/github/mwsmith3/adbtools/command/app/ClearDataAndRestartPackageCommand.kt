@@ -1,12 +1,9 @@
 package com.github.mwsmith3.adbtools.command.app
 
 import com.github.mwsmith3.adbtools.command.StartForResultCommand
-import com.intellij.openapi.project.Project
 
-class ClearDataAndRestartPackageCommand(
-        packageName: String,
-        private val activityName: String) :
-        StartForResultCommand(packageName) {
+class ClearDataAndRestartPackageCommand(packageName: String, private val activityName: String) :
+    StartForResultCommand(packageName) {
     override val command: String
         get() = "pm clear $packageName && am start $packageName/$activityName"
     override val description: String

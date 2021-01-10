@@ -8,7 +8,7 @@ class GenericReceiver : MultiLineReceiver() {
     val shellOutput: List<String> = _shellOutput
 
     override fun processNewLines(lines: Array<String>) {
-        _shellOutput.addAll(listOf(*lines))
+        _shellOutput.addAll(lines.toList())
     }
 
     override fun isCancelled() = false

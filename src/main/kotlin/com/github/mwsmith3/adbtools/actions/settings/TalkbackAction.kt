@@ -17,12 +17,18 @@ class TalkbackAction : AdbAction() {
 
         if (project != null && device != null) {
             execute(project) {
-                val talkBackInstalled = CommandRunner.run(device, GetPackageInstalledCommand("com.google.android.marvin.talkback"))
+                val talkBackInstalled =
+                    CommandRunner.run(device, GetPackageInstalledCommand("com.google.android.marvin.talkback"))
                 if (talkBackInstalled) {
                     val talkBackEnabled = CommandRunner.run(device, GetTalkBackEnabledCommand)
                     CommandRunner.run(device, ToggleTalkBackCommand(talkBackEnabled))
                 } else {
-                    NotificationHelper.confirmAction(project, "TalkBack not installed", "Do you want to install TalkBack?", "Go to Google Play") {
+                    NotificationHelper.confirmAction(
+                        project,
+                        "TalkBack not installed",
+                        "Do you want to install TalkBack?",
+                        "Go to Google Play"
+                    ) {
                         execute(project) {
                             CommandRunner.run(device, GoToTalkBackGooglePlayCommand)
                         }

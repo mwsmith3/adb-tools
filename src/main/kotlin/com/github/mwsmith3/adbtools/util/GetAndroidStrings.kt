@@ -1,11 +1,11 @@
 package com.github.mwsmith3.adbtools.util
 
 import com.android.ide.common.rendering.api.ResourceNamespace
-import org.jetbrains.android.dom.converters.ResourceReferenceConverter
 import com.android.resources.ResourceType
 import com.android.tools.idea.res.ResourceRepositoryManager
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.util.xml.impl.ConvertContextFactory
+import org.jetbrains.android.dom.converters.ResourceReferenceConverter
 import org.jetbrains.android.dom.manifest.Manifest
 import org.jetbrains.android.facet.AndroidFacet
 

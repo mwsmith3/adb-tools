@@ -28,5 +28,5 @@ abstract class AdbAction : AnAction() {
     }
 
     fun execute(project: Project, executable: () -> (Unit)) =
-            project.getService(AdbExecutorService::class.java).execute(executable)
+        project.getService(AdbExecutorService::class.java).execute(executable)
 }

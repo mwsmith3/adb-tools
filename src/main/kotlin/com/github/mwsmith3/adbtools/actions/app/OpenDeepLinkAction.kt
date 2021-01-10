@@ -10,6 +10,8 @@ import com.github.mwsmith3.adbtools.window.AdbToolsWindowView.Companion.DEEP_LIN
 import com.intellij.openapi.actionSystem.AnActionEvent
 
 class OpenDeepLinkAction : AdbAction() {
+
+    @Suppress("ReturnCount")
     override fun actionPerformed(event: AnActionEvent) {
         val device = getDevice(event) ?: return
         val deepLink = event.getData(DEEP_LINK_KEY) ?: return
@@ -29,7 +31,7 @@ class OpenDeepLinkAction : AdbAction() {
 
     override fun update(e: AnActionEvent) {
         super.update(e)
-        e.presentation.isEnabled = e.getData(AdbToolsWindowView.DEVICE_KEY) != null
-                && e.getData(DEEP_LINK_KEY) != null
+        e.presentation.isEnabled = e.getData(AdbToolsWindowView.DEVICE_KEY) != null &&
+            e.getData(DEEP_LINK_KEY) != null
     }
 }

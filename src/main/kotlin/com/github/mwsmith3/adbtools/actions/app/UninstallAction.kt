@@ -2,11 +2,10 @@ package com.github.mwsmith3.adbtools.actions.app
 
 import com.android.ddmlib.InstallException
 import com.github.mwsmith3.adbtools.actions.AdbAction
-import com.github.mwsmith3.adbtools.command.CommandRunner
 import com.github.mwsmith3.adbtools.util.NotificationHelper
 import com.intellij.openapi.actionSystem.AnActionEvent
 
-class UninstallAction  : AdbAction() {
+class UninstallAction : AdbAction() {
     override fun actionPerformed(event: AnActionEvent) {
         val device = getDevice(event)
         val project = event.project

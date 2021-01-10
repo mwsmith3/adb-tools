@@ -1,10 +1,8 @@
 package com.github.mwsmith3.adbtools.window
 
 import com.android.tools.idea.run.ConnectedAndroidDevice
-import com.github.mwsmith3.adbtools.deeplinks.DeepLink
 import com.intellij.openapi.project.Project
 import org.jetbrains.android.facet.AndroidFacet
-import org.jetbrains.android.util.AndroidUtils
 
 class AdbToolsModel(private val project: Project) {
 

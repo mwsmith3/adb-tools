@@ -3,7 +3,7 @@ package com.github.mwsmith3.adbtools.command.app
 import com.github.mwsmith3.adbtools.command.StartForResultCommand
 
 class StartPackageCommand(packageName: String, private val activityName: String) :
-        StartForResultCommand(packageName) {
+    StartForResultCommand(packageName) {
     override val command: String
         get() = "am start $packageName/$activityName"
     override val description: String
