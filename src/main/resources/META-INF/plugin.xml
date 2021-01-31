@@ -11,7 +11,6 @@
     <extensions defaultExtensionNs="com.intellij">
         <projectService serviceInterface="com.github.mwsmith3.adbtools.device.DeviceProviderService"
                         serviceImplementation="com.github.mwsmith3.adbtools.device.DeviceProviderServiceImpl"/>
-        <projectService serviceImplementation="com.github.mwsmith3.adbtools.adb.AdbExecutorService"/>
         <toolWindow
                 id="Android Debug Bridge Tools"
                 icon="AllIcons.Toolwindows.ToolWindowBuild"

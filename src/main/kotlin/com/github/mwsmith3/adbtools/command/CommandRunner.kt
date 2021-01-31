@@ -5,7 +5,6 @@ import com.android.ddmlib.IDevice
 import com.android.ddmlib.ShellCommandUnresponsiveException
 import com.android.ddmlib.TimeoutException
 import com.github.mwsmith3.adbtools.util.NotificationHelper
-import kotlinx.coroutines.runBlocking
 import java.io.IOException
 
 @Suppress("TooGenericExceptionCaught", "ComplexCondition")
@@ -20,9 +19,7 @@ object CommandRunner {
     fun <T> run(device: IDevice, command: Command<T>): T {
         NotificationHelper.info("${device.name}: ${command.command}")
         return try {
-            runBlocking {
-                command.run(device)
-            }
+            command.run(device)
         } catch (e: Exception) {
             if (e is TimeoutException ||
                 e is AdbCommandRejectedException ||

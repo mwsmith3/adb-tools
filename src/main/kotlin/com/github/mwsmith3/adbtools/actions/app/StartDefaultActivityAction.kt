@@ -20,7 +20,7 @@ class StartDefaultActivityAction : AdbAction() {
 
         try {
             val activityName = getDefaultActivityName(facet, device)
-            execute(project) {
+            execute {
                 val result = CommandRunner.run(
                     device,
                     StartPackageCommand(

@@ -18,7 +18,7 @@ class RestartAction : AdbAction() {
         val packageName = getPackageName(event) ?: return
         val facet = getFacet(event) ?: return
 
-        execute(project) {
+        execute {
             try {
                 val activityName = getDefaultActivityName(facet, device)
                 val result = CommandRunner.run(

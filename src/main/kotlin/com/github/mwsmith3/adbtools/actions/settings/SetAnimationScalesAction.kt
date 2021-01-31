@@ -13,7 +13,7 @@ class SetAnimationScalesAction : AdbOptionsAction() {
         val project = event.project
         if (project != null && device != null) {
             showOptions(event, "Animation Scale Options", AnimationScale.LIST) {
-                execute(project) {
+                execute {
                     CommandRunner.run(device, SetAnimationScalesCommand(it))
                 }
             }
