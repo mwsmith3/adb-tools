@@ -4,11 +4,15 @@ import com.android.ddmlib.AndroidDebugBridge
 import com.android.tools.idea.run.ConnectedAndroidDevice
 import com.google.common.util.concurrent.ListenableFuture
 import com.intellij.openapi.Disposable
-import kotlinx.coroutines.CoroutineScope
+import io.reactivex.rxjava3.core.Observable
 
-interface DeviceProviderService : Disposable, CoroutineScope {
-    fun start(): ListenableFuture<AndroidDebugBridge>
-    fun addDeviceProviderServiceListener(listener: DeviceProviderServiceListener)
-    fun removeDeviceProviderServiceListener(listener: DeviceProviderServiceListener)
-    fun getDevices(): List<ConnectedAndroidDevice>
+interface DeviceProviderService : Disposable {
+    fun setup(listenableFutureBridge: ListenableFuture<AndroidDebugBridge>)
+    fun observe(): Observable<State>
+
+    sealed class State {
+        object Loading : State()
+        data class Error(val throwable: Throwable) : State()
+        data class Success(val devices: List<ConnectedAndroidDevice>) : State()
+    }
 }

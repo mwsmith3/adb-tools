@@ -12,10 +12,7 @@ class AdbToolsModel(private val project: Project) {
     private val deepLinks = mutableListOf<String>()
 
     interface StateListener {
-        fun deviceAdded(device: ConnectedAndroidDevice)
-        fun deviceRemoved(device: ConnectedAndroidDevice)
-        fun deviceUpdated(device: ConnectedAndroidDevice)
-        fun devicesCleared()
+        fun devicesSet(devices: List<ConnectedAndroidDevice>)
         fun facetsSet(facets: List<AndroidFacet>)
         fun deepLinksSet(deepLinks: List<String>)
     }
@@ -28,30 +25,11 @@ class AdbToolsModel(private val project: Project) {
         stateListeners.remove(listener)
     }
 
-    fun addDevice(device: ConnectedAndroidDevice) {
-        devices.add(device)
+    fun setDevices(devices: List<ConnectedAndroidDevice>) {
+        this.devices.clear()
+        this.devices.addAll(devices)
         stateListeners.forEach {
-            it.deviceAdded(device)
-        }
-    }
-
-    fun removeDevice(device: ConnectedAndroidDevice) {
-        devices.remove(device)
-        stateListeners.forEach {
-            it.deviceRemoved(device)
-        }
-    }
-
-    fun updateDevice(device: ConnectedAndroidDevice) {
-        stateListeners.forEach {
-            it.deviceUpdated(device)
-        }
-    }
-
-    fun clearDevices() {
-        devices.clear()
-        stateListeners.forEach {
-            it.devicesCleared()
+            it.devicesSet(devices)
         }
     }
 

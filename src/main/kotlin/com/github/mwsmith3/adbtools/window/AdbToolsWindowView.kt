@@ -156,21 +156,17 @@ class AdbToolsWindowView(private val project: Project, private val model: AdbToo
     }
 
     private inner class ModelStateListener : AdbToolsModel.StateListener {
-        override fun deviceAdded(device: ConnectedAndroidDevice) {
-            deviceComboModel.addItem(device)
-            deviceComboModel.selectedItem = device
-        }
-
-        override fun deviceRemoved(device: ConnectedAndroidDevice) {
-            deviceComboModel.remove(device)
-        }
-
-        override fun deviceUpdated(device: ConnectedAndroidDevice) {
-            deviceComboModel.contentsChanged(device)
-        }
-
-        override fun devicesCleared() {
-            deviceComboModel.removeAll()
+        override fun devicesSet(devices: List<ConnectedAndroidDevice>) {
+            val newSelection = if (devices.isNotEmpty()) {
+                val selected = deviceComboModel.selected
+                devices.find { selected?.serial == it.serial } ?: devices[0]
+            } else {
+                null
+            }
+            deviceComboModel.replaceAll(devices)
+            newSelection?.let {
+                deviceComboModel.selectedItem = it
+            }
         }
 
         override fun facetsSet(facets: List<AndroidFacet>) {
