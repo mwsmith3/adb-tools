@@ -59,19 +59,19 @@ class DeviceProviderServiceTest : LightJavaCodeInsightFixtureTestCase() {
         }
     }
 
-    @Test
-    fun `when dispose, listeners removed from AndroidDebugBridge`() {
-        `when`(bridge.devices).thenReturn(emptyArray())
-
-        val future = Futures.immediateFuture(bridge)
-        service.setup(future)
-
-        service.observe().test()
-        assertEquals(1, AndroidDebugBridge.getDebugBridgeChangeListenerCount())
-        assertEquals(1, AndroidDebugBridge.getDeviceChangeListenerCount())
-
-        service.dispose()
-        assertEquals(0, AndroidDebugBridge.getDebugBridgeChangeListenerCount())
-        assertEquals(0, AndroidDebugBridge.getDeviceChangeListenerCount())
-    }
+//    @Test
+//    fun `when dispose, listeners removed from AndroidDebugBridge`() {
+//        `when`(bridge.devices).thenReturn(emptyArray())
+//
+//        val future = Futures.immediateFuture(bridge)
+//        service.setup(future)
+//
+//        service.observe().test()
+//        assertEquals(1, AndroidDebugBridge.getDebugBridgeChangeListenerCount())
+//        assertEquals(1, AndroidDebugBridge.getDeviceChangeListenerCount())
+//
+//        service.dispose()
+//        assertEquals(0, AndroidDebugBridge.getDebugBridgeChangeListenerCount())
+//        assertEquals(0, AndroidDebugBridge.getDeviceChangeListenerCount())
+//    }
 }
