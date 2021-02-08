@@ -58,20 +58,4 @@ class DeviceProviderServiceTest : LightJavaCodeInsightFixtureTestCase() {
             it is DeviceProviderService.State.Success && it.devices.size == 1 && it.devices[0].serial == "mock-serial-number"
         }
     }
-
-    @Test
-    fun `when dispose, listeners removed from AndroidDebugBridge`() {
-        `when`(bridge.devices).thenReturn(emptyArray())
-
-        val future = Futures.immediateFuture(bridge)
-        service.setup(future)
-
-        service.observe().test()
-        assertEquals(1, AndroidDebugBridge.getDebugBridgeChangeListenerCount())
-        assertEquals(1, AndroidDebugBridge.getDeviceChangeListenerCount())
-
-        service.dispose()
-        assertEquals(0, AndroidDebugBridge.getDebugBridgeChangeListenerCount())
-        assertEquals(0, AndroidDebugBridge.getDeviceChangeListenerCount())
-    }
 }

@@ -27,6 +27,7 @@ val pluginVersion: String by project
 val pluginSinceBuild: String by project
 val pluginUntilBuild: String by project
 
+val platformVersion: String by project
 val platformType: String by project
 val platformPlugins: String by project
 val platformDownloadSources: String by project
@@ -45,13 +46,7 @@ dependencies {
     detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.14.2")
     implementation("org.jooq:joor-java-8:0.9.7")
     implementation("io.reactivex.rxjava3:rxjava:3.0.9")
-    compileOnly(fileTree("$studioCompilePath/plugins/android"))
-    compileOnly(fileTree("$studioCompilePath/plugins/android-layoutlib-native"))
-    compileOnly(fileTree("$studioCompilePath/lib"))
 
-    testImplementation(fileTree("$studioCompilePath/plugins/android"))
-    testImplementation(fileTree("$studioCompilePath/plugins/android-layoutlib-native"))
-    testImplementation(fileTree("$studioCompilePath/lib"))
     testImplementation("org.mockito:mockito-core:3.7.7")
 }
 
@@ -59,11 +54,10 @@ dependencies {
 // Read more: https://github.com/JetBrains/gradle-intellij-plugin
 intellij {
     pluginName = pluginName_
-//    version = platformVersion
+    version = platformVersion
     type = platformType
     downloadSources = platformDownloadSources.toBoolean()
     updateSinceUntilBuild = true
-    localPath = studioCompilePath
     alternativeIdePath = idePath
 
     // Plugin Dependencies. Uses `platformPlugins` property from the gradle.properties file.
