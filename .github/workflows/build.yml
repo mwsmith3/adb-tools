@@ -70,11 +70,11 @@ jobs:
 
       # Run detekt, ktlint and tests
       - name: Run Linters and Test
-        run: ./gradlew check -PstudioCompilePath=/Users/runner/Applications/Android Studio.app/Contents
+        run: ./gradlew check -PstudioCompilePath="/Users/runner/Applications/Android Studio.app/Contents"
 
       # Run verifyPlugin Gradle task
       - name: Verify Plugin
-        run: ./gradlew verifyPlugin -PstudioCompilePath=/Users/runner/Applications/Android Studio.app/Contents
+        run: ./gradlew verifyPlugin -PstudioCompilePath="/Users/runner/Applications/Android Studio.app/Contents"
 
   # Build plugin with buildPlugin Gradle task and provide the artifact for the next workflow jobs
   # Requires test job to be passed
