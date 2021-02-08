@@ -19,23 +19,22 @@ class DeviceProviderServiceTest : LightJavaCodeInsightFixtureTestCase() {
 
     private val bridge: AndroidDebugBridge = Mockito.mock(AndroidDebugBridge::class.java)
     private val device: IDevice = Mockito.mock(IDevice::class.java)
-    private lateinit var service: DeviceProviderServiceImpl
 
     @Before
     fun before() {
         super.setUp()
-        service = DeviceProviderServiceImpl(project)
-        service.executor = MoreExecutors.newDirectExecutorService()
     }
 
     @After
     fun after() {
         super.tearDown()
-        service.dispose()
     }
 
     @Test
     fun `when bridge future returns error, then state is Error`() {
+        val service = DeviceProviderServiceImpl(project)
+        service.executor = MoreExecutors.newDirectExecutorService()
+
         val error = RuntimeException()
         val future = Futures.immediateFailedFuture<AndroidDebugBridge>(error)
 
@@ -43,10 +42,15 @@ class DeviceProviderServiceTest : LightJavaCodeInsightFixtureTestCase() {
 
         val expectedState = DeviceProviderService.State.Error(error)
         service.observe().test().assertValue(expectedState)
+
+        service.dispose()
     }
 
     @Test
     fun `when bridge future returns bridge with devices, then state is Success`() {
+        val service = DeviceProviderServiceImpl(project)
+        service.executor = MoreExecutors.newDirectExecutorService()
+
         `when`(device.serialNumber).thenReturn("mock-serial-number")
         `when`(device.isEmulator).thenReturn(false)
         `when`(bridge.devices).thenReturn(Array(1) { device })
@@ -57,5 +61,7 @@ class DeviceProviderServiceTest : LightJavaCodeInsightFixtureTestCase() {
         service.observe().test().assertValue {
             it is DeviceProviderService.State.Success && it.devices.size == 1 && it.devices[0].serial == "mock-serial-number"
         }
+
+        service.dispose()
     }
 }
