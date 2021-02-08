@@ -12,9 +12,9 @@ class KillAction : AdbAction() {
         val packageName = getPackageName(event)
 
         if (project != null && device != null && packageName != null) {
-            execute {
+            execute(Runnable {
                 CommandRunner.run(device, KillPackageCommand(packageName))
-            }
+            })
         }
     }
 }

@@ -26,7 +26,7 @@ sealed class AnimationScale {
             On(1.5F),
             On(2F),
             On(5F),
-            On(10F),
+            On(10F)
         )
     }
 }

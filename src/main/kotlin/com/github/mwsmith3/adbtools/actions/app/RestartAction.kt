@@ -18,7 +18,7 @@ class RestartAction : AdbAction() {
         val packageName = getPackageName(event) ?: return
         val facet = getFacet(event) ?: return
 
-        execute {
+        execute(Runnable {
             try {
                 val activityName = getDefaultActivityName(facet, device)
                 val result = CommandRunner.run(
@@ -31,6 +31,6 @@ class RestartAction : AdbAction() {
             } catch (e: ActivityLocator.ActivityLocatorException) {
                 NotificationHelper.error("Unable to locate default activity for package $packageName")
             }
-        }
+        })
     }
 }

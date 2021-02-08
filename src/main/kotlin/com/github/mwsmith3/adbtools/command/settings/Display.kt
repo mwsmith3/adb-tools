@@ -21,7 +21,7 @@ sealed class Display {
             Spec(1280, 800, 216, "Nexus 7 2012"),
             Spec(2560, 1600, 300, "Nexus 10"),
             Spec(2560, 1800, 308, "Pixel C"),
-            Spec(3000, 2000, 293, "Pixel Slate"),
+            Spec(3000, 2000, 293, "Pixel Slate")
         )
     }
 }

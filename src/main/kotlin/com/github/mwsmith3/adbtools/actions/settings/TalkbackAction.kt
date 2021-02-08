@@ -16,7 +16,7 @@ class TalkbackAction : AdbAction() {
         val project = event.project
 
         if (project != null && device != null) {
-            execute {
+            execute(Runnable {
                 val talkBackInstalled =
                     CommandRunner.run(device, GetPackageInstalledCommand("com.google.android.marvin.talkback"))
                 if (talkBackInstalled) {
@@ -27,14 +27,14 @@ class TalkbackAction : AdbAction() {
                         project,
                         "TalkBack not installed",
                         "Do you want to install TalkBack?",
-                        "Go to Google Play"
-                    ) {
-                        execute {
+                        "Go to Google Play",
+                        Runnable {
+                        execute(Runnable {
                             CommandRunner.run(device, GoToTalkBackGooglePlayCommand)
-                        }
-                    }
+                        })
+                    })
                 }
-            }
+            })
         }
     }
 }

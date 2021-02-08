@@ -12,7 +12,7 @@ class UninstallAction : AdbAction() {
         val packageName = getPackageName(event)
 
         if (project != null && device != null && packageName != null) {
-            execute {
+            execute(Runnable {
                 try {
                     val errorCode = device.uninstallPackage(packageName)
                     if (errorCode == null) {
@@ -23,7 +23,7 @@ class UninstallAction : AdbAction() {
                 } catch (e: InstallException) {
                     NotificationHelper.error("Uninstalled failure for $packageName, on ${device.name}: ${e.message}")
                 }
-            }
+            })
         }
     }
 }

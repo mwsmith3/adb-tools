@@ -18,7 +18,7 @@ class OpenDeepLinkAction : AdbAction() {
         val project = event.project ?: return
         val packageName = getPackageName(event) ?: return
 
-        execute {
+        execute(Runnable {
             val result = CommandRunner.run(
                 device,
                 OpenDeepLinkCommand(packageName, deepLink)
@@ -26,7 +26,7 @@ class OpenDeepLinkAction : AdbAction() {
             if (result is Result.Error) {
                 NotificationHelper.commandError(result.message)
             }
-        }
+        })
     }
 
     override fun update(e: AnActionEvent) {
