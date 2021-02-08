@@ -126,11 +126,6 @@ jobs:
           echo "::set-output name=changelog::$CHANGELOG"
           echo "::set-output name=artifact::$ARTIFACT"
 
-      - name: Get Android Studio
-        run: |
-          curl -O https://dl.google.com/dl/android/studio/ide-zips/4.1.2.0/android-studio-ide-201.7042882-mac.zip
-          unzip android-studio-ide-201.7042882-mac.zip Applications
-
       # Build artifact using buildPlugin Gradle task
       - name: Build Plugin
         run: ./gradlew buildPlugin
