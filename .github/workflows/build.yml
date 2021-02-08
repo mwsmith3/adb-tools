@@ -42,7 +42,7 @@ jobs:
       - name: Get Android Studio
         run: |
           curl -O https://dl.google.com/dl/android/studio/ide-zips/4.1.2.0/android-studio-ide-201.7042882-mac.zip
-          unzip android-studio-ide-201.7042882-mac.zip Applications
+          unzip android-studio-ide-201.7042882-mac.zip -d ~/Applications
 
       # Setup Java 1.8 environment for the next steps
       - name: Setup Java
