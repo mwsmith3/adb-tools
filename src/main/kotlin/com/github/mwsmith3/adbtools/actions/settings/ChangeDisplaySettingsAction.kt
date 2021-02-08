@@ -13,9 +13,11 @@ class ChangeDisplaySettingsAction : AdbOptionsAction() {
         val project = event.project
         if (project != null && device != null) {
             showOptions(event, "Display Options", Display.LIST) {
-                execute(Runnable {
-                    CommandRunner.run(device, ChangeDisplaySettingsCommand(it))
-                })
+                execute(
+                    Runnable {
+                        CommandRunner.run(device, ChangeDisplaySettingsCommand(it))
+                    }
+                )
             }
         }
     }

@@ -11,9 +11,11 @@ class EnableDeveloperOptionsAction : AdbAction() {
         val project = event.project
 
         if (project != null && device != null) {
-            execute(Runnable {
-                CommandRunner.run(device, EnableDeveloperOptionsCommand)
-            })
+            execute(
+                Runnable {
+                    CommandRunner.run(device, EnableDeveloperOptionsCommand)
+                }
+            )
         }
     }
 }

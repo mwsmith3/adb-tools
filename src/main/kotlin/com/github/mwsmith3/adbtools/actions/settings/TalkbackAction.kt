@@ -16,25 +16,30 @@ class TalkbackAction : AdbAction() {
         val project = event.project
 
         if (project != null && device != null) {
-            execute(Runnable {
-                val talkBackInstalled =
-                    CommandRunner.run(device, GetPackageInstalledCommand("com.google.android.marvin.talkback"))
-                if (talkBackInstalled) {
-                    val talkBackEnabled = CommandRunner.run(device, GetTalkBackEnabledCommand)
-                    CommandRunner.run(device, ToggleTalkBackCommand(talkBackEnabled))
-                } else {
-                    NotificationHelper.confirmAction(
-                        project,
-                        "TalkBack not installed",
-                        "Do you want to install TalkBack?",
-                        "Go to Google Play",
-                        Runnable {
-                        execute(Runnable {
-                            CommandRunner.run(device, GoToTalkBackGooglePlayCommand)
-                        })
-                    })
+            execute(
+                Runnable {
+                    val talkBackInstalled =
+                        CommandRunner.run(device, GetPackageInstalledCommand("com.google.android.marvin.talkback"))
+                    if (talkBackInstalled) {
+                        val talkBackEnabled = CommandRunner.run(device, GetTalkBackEnabledCommand)
+                        CommandRunner.run(device, ToggleTalkBackCommand(talkBackEnabled))
+                    } else {
+                        NotificationHelper.confirmAction(
+                            project,
+                            "TalkBack not installed",
+                            "Do you want to install TalkBack?",
+                            "Go to Google Play",
+                            Runnable {
+                                execute(
+                                    Runnable {
+                                        CommandRunner.run(device, GoToTalkBackGooglePlayCommand)
+                                    }
+                                )
+                            }
+                        )
+                    }
                 }
-            })
+            )
         }
     }
 }

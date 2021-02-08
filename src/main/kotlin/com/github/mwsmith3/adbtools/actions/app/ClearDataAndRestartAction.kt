@@ -20,18 +20,20 @@ class ClearDataAndRestartAction : AdbAction() {
 
         try {
             val activityName = getDefaultActivityName(facet, device)
-            execute(Runnable {
-                val result = CommandRunner.run(
-                    device,
-                    ClearDataAndRestartPackageCommand(
-                        packageName,
-                        activityName
+            execute(
+                Runnable {
+                    val result = CommandRunner.run(
+                        device,
+                        ClearDataAndRestartPackageCommand(
+                            packageName,
+                            activityName
+                        )
                     )
-                )
-                if (result is Result.Error) {
-                    NotificationHelper.commandError(result.message)
+                    if (result is Result.Error) {
+                        NotificationHelper.commandError(result.message)
+                    }
                 }
-            })
+            )
         } catch (e: ActivityLocator.ActivityLocatorException) {
             NotificationHelper.error("Unable to locate default activity for package $packageName")
         }

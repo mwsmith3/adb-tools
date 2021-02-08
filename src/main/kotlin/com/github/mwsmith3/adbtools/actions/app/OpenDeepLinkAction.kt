@@ -18,20 +18,21 @@ class OpenDeepLinkAction : AdbAction() {
         val project = event.project ?: return
         val packageName = getPackageName(event) ?: return
 
-        execute(Runnable {
-            val result = CommandRunner.run(
-                device,
-                OpenDeepLinkCommand(packageName, deepLink)
-            )
-            if (result is Result.Error) {
-                NotificationHelper.commandError(result.message)
+        execute(
+            Runnable {
+                val result = CommandRunner.run(
+                    device,
+                    OpenDeepLinkCommand(packageName, deepLink)
+                )
+                if (result is Result.Error) {
+                    NotificationHelper.commandError(result.message)
+                }
             }
-        })
+        )
     }
 
     override fun update(e: AnActionEvent) {
         super.update(e)
-        e.presentation.isEnabled = e.getData(AdbToolsWindowView.DEVICE_KEY) != null &&
-            e.getData(DEEP_LINK_KEY) != null
+        e.presentation.isEnabled = e.getData(AdbToolsWindowView.DEVICE_KEY) != null && e.getData(DEEP_LINK_KEY) != null
     }
 }
