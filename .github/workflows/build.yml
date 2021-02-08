@@ -70,7 +70,7 @@ jobs:
 
       # Run detekt, ktlint and tests
       - name: Run Linters and Test
-        run: ./gradlew check -PstudioCompilePath="/Users/runner/Applications/Android Studio.app/Contents"
+        run: ./gradlew check -PstudioCompilePath="/Users/runner/Applications/Android Studio.app/Contents" --stacktrace
 
       # Run verifyPlugin Gradle task
       - name: Verify Plugin
