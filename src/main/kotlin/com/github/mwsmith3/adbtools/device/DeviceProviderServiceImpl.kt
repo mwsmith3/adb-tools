@@ -58,7 +58,7 @@ class DeviceProviderServiceImpl(project: Project) : DeviceProviderService {
                     stateSubject.onNext(DeviceProviderService.State.Error(error))
                 }
             },
-            executorProvider.getTaskExecutorService()
+            executorProvider.tasks
         )
     }
 

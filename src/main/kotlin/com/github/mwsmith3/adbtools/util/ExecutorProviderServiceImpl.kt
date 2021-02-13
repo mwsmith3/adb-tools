@@ -5,11 +5,6 @@ import org.jetbrains.ide.PooledThreadExecutor
 import java.util.concurrent.ExecutorService
 
 class ExecutorProviderServiceImpl : ExecutorProviderService {
-    override fun getTaskExecutorService(): ExecutorService {
-        return PooledThreadExecutor.INSTANCE
-    }
-
-    override fun getEdtExecutorService(): ExecutorService {
-        return EdtExecutorService.getInstance()
-    }
+    override val tasks: ExecutorService = PooledThreadExecutor.INSTANCE
+    override val edt: ExecutorService = EdtExecutorService.getInstance()
 }
