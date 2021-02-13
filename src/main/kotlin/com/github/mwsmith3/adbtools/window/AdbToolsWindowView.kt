@@ -17,6 +17,8 @@ import com.intellij.ui.layout.panel
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
 import icons.AndroidIcons
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.subjects.PublishSubject
 import org.jetbrains.android.facet.AndroidFacet
 import javax.swing.JCheckBox
 import javax.swing.JTextField
@@ -27,7 +29,10 @@ import javax.swing.event.ListDataListener
 class AdbToolsWindowView(private val project: Project, private val model: AdbToolsModel) :
     SimpleToolWindowPanel(true, false) {
 
-    private val listeners = mutableListOf<AdbToolsWindowViewListener>()
+    val facetSelectionObservable: Observable<AndroidFacet>
+        get() = _facetSelectionObservable
+    private val _facetSelectionObservable = PublishSubject.create<AndroidFacet>()
+
     private val deviceComboModel = MutableCollectionComboBoxModel<ConnectedAndroidDevice>()
     private val facetComboModel = MutableCollectionComboBoxModel<AndroidFacet>()
     private val deepLinkComboModel = MutableCollectionComboBoxModel<String>()
@@ -66,8 +71,8 @@ class AdbToolsWindowView(private val project: Project, private val model: AdbToo
                 },
                 facetListCellRenderer
             ).constraints(growX, pushX).component.addActionListener {
-                listeners.forEach {
-                    it.onFacetSelected(facetComboModel.selected)
+                facetComboModel.selected?.let {
+                    _facetSelectionObservable.onNext(it)
                 }
             }
         }
@@ -112,14 +117,6 @@ class AdbToolsWindowView(private val project: Project, private val model: AdbToo
         this.toolbar = createActionToolbar("com.github.mwsmith3.adbtools.window.actions").component
         deviceComboModel.addListDataListener(DeviceComboListener())
         model.addStateListener(ModelStateListener())
-    }
-
-    fun addListener(listener: AdbToolsWindowViewListener) {
-        listeners.add(listener)
-    }
-
-    fun removeListener(listener: AdbToolsWindowViewListener) {
-        listeners.remove(listener)
     }
 
     private fun setContent(connectedDevices: Boolean) {
