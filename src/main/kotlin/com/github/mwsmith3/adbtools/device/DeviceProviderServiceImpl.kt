@@ -3,20 +3,18 @@ package com.github.mwsmith3.adbtools.device
 import com.android.ddmlib.AndroidDebugBridge
 import com.android.ddmlib.IDevice
 import com.android.tools.idea.run.ConnectedAndroidDevice
-import com.google.common.annotations.VisibleForTesting
+import com.github.mwsmith3.adbtools.util.ExecutorProviderService
 import com.google.common.util.concurrent.FutureCallback
 import com.google.common.util.concurrent.Futures
-import com.google.common.util.concurrent.ListenableFuture
+import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
-import org.jetbrains.ide.PooledThreadExecutor
-import java.util.concurrent.ExecutorService
 
 class DeviceProviderServiceImpl(project: Project) : DeviceProviderService {
 
-    @VisibleForTesting
-    var executor: ExecutorService = PooledThreadExecutor.INSTANCE
+    private val executorProvider = ServiceManager.getService(ExecutorProviderService::class.java)
+    private val bridgeProvider = ServiceManager.getService(BridgeProviderService::class.java)
 
     private var bridge: AndroidDebugBridge? = null
 
@@ -41,14 +39,16 @@ class DeviceProviderServiceImpl(project: Project) : DeviceProviderService {
         getDevicesAndEmit()
     }
 
-    override fun setup(listenableFutureBridge: ListenableFuture<AndroidDebugBridge>) {
+    init {
         stateSubject.onNext(DeviceProviderService.State.Loading)
 
         AndroidDebugBridge.addDeviceChangeListener(deviceChangeListener)
         AndroidDebugBridge.addDebugBridgeChangeListener(adbChangeListener)
 
+        val listenableFutureBridgeProvider = bridgeProvider.getListenableFutureBridgeProvider()
+
         Futures.addCallback(
-            listenableFutureBridge,
+            listenableFutureBridgeProvider(project),
             object : FutureCallback<AndroidDebugBridge> {
                 override fun onSuccess(bridge: AndroidDebugBridge?) {
                     this@DeviceProviderServiceImpl.bridge = bridge
@@ -58,17 +58,11 @@ class DeviceProviderServiceImpl(project: Project) : DeviceProviderService {
                     stateSubject.onNext(DeviceProviderService.State.Error(error))
                 }
             },
-            executor
+            executorProvider.getTaskExecutorService()
         )
     }
 
     override fun observe(): Observable<DeviceProviderService.State> = stateSubject
-
-    override fun dispose() {
-        AndroidDebugBridge.removeDeviceChangeListener(deviceChangeListener)
-        AndroidDebugBridge.removeDebugBridgeChangeListener(adbChangeListener)
-        bridge = null
-    }
 
     private fun getDevicesAndEmit() {
         stateSubject.onNext(
@@ -82,5 +76,11 @@ class DeviceProviderServiceImpl(project: Project) : DeviceProviderService {
                 ConnectedAndroidDevice(iDevice, null)
             }
         } ?: emptyList()
+    }
+
+    override fun dispose() {
+        AndroidDebugBridge.removeDeviceChangeListener(deviceChangeListener)
+        AndroidDebugBridge.removeDebugBridgeChangeListener(adbChangeListener)
+        bridge = null
     }
 }
