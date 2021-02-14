@@ -1,5 +1,6 @@
 package com.github.mwsmith3.adbtools.window
 
+import com.android.tools.idea.run.ConnectedAndroidDevice
 import com.github.mwsmith3.adbtools.deeplinks.DeepLinkParser
 import com.github.mwsmith3.adbtools.device.DeviceProviderService
 import com.github.mwsmith3.adbtools.util.ExecutorProviderService
@@ -15,7 +16,13 @@ class AdbToolsController(val project: Project, private val model: AdbToolsModel,
     private val deviceProviderService = project.getService(DeviceProviderService::class.java)
     private val executorProvider = ServiceManager.getService(ExecutorProviderService::class.java)
 
-    fun setup() {
+    init {
+        observeDevices()
+        observeFacetSelection()
+        model.setFacets(getFacets())
+    }
+
+    private fun observeFacetSelection() {
         view.facetSelectionObservable
             .subscribeOn(Schedulers.from(executorProvider.tasks))
             .map {
@@ -25,19 +32,25 @@ class AdbToolsController(val project: Project, private val model: AdbToolsModel,
             .subscribe {
                 model.setDeepLinks(it)
             }
+    }
 
-        model.setFacets(getFacets())
-
+    private fun observeDevices() {
         deviceProviderService.observe()
             .subscribeOn(Schedulers.from(executorProvider.tasks))
-            .observeOn(Schedulers.from(executorProvider.edt))
-            .subscribe {
-                when (it) {
-                    is DeviceProviderService.State.Success -> {
-                        model.setDevices(it.devices)
-                    }
+            .map { iDeviceList ->
+                iDeviceList.map { iDevice ->
+                    ConnectedAndroidDevice(iDevice, null)
                 }
             }
+            .observeOn(Schedulers.from(executorProvider.edt))
+            .subscribe(
+                {
+                    model.setDevices(it)
+                },
+                {
+                    model.setDevices(emptyList())
+                }
+            )
     }
 
     private fun getFacets() = AndroidUtils.getApplicationFacets(project)

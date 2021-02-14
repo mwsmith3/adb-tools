@@ -10,8 +10,8 @@ class AdbToolsWindowFactory : ToolWindowFactory, DumbAware {
     override fun createToolWindowContent(project: Project, toolWindow: ToolWindow) {
         val model = AdbToolsModel(project)
         val view = AdbToolsWindowView(project, model)
-        val controller = AdbToolsController(project, model, view)
-        controller.setup()
+        AdbToolsController(project, model, view)
+
         val contentFactory = toolWindow.contentManager.factory
         val content = contentFactory.createContent(view, "", false)
         toolWindow.contentManager.addContent(content)

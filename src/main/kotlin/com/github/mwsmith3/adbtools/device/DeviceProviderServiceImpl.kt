@@ -2,7 +2,6 @@ package com.github.mwsmith3.adbtools.device
 
 import com.android.ddmlib.AndroidDebugBridge
 import com.android.ddmlib.IDevice
-import com.android.tools.idea.run.ConnectedAndroidDevice
 import com.github.mwsmith3.adbtools.util.ExecutorProviderService
 import com.google.common.util.concurrent.FutureCallback
 import com.google.common.util.concurrent.Futures
@@ -18,7 +17,7 @@ class DeviceProviderServiceImpl(project: Project) : DeviceProviderService {
 
     private var bridge: AndroidDebugBridge? = null
 
-    private val stateSubject = BehaviorSubject.create<DeviceProviderService.State>()
+    private val iDeviceSubject = BehaviorSubject.create<List<IDevice>>()
 
     private val deviceChangeListener = object : AndroidDebugBridge.IDeviceChangeListener {
         override fun deviceConnected(device: IDevice?) {
@@ -40,8 +39,6 @@ class DeviceProviderServiceImpl(project: Project) : DeviceProviderService {
     }
 
     init {
-        stateSubject.onNext(DeviceProviderService.State.Loading)
-
         AndroidDebugBridge.addDeviceChangeListener(deviceChangeListener)
         AndroidDebugBridge.addDebugBridgeChangeListener(adbChangeListener)
 
@@ -55,27 +52,23 @@ class DeviceProviderServiceImpl(project: Project) : DeviceProviderService {
                     getDevicesAndEmit()
                 }
                 override fun onFailure(error: Throwable) {
-                    stateSubject.onNext(DeviceProviderService.State.Error(error))
+                    iDeviceSubject.onError(error)
                 }
             },
             executorProvider.tasks
         )
     }
 
-    override fun observe(): Observable<DeviceProviderService.State> = stateSubject
+    override fun observe(): Observable<List<IDevice>> = iDeviceSubject
 
     private fun getDevicesAndEmit() {
-        stateSubject.onNext(
-            DeviceProviderService.State.Success(getDevicesFromBridge())
+        iDeviceSubject.onNext(
+            getDevicesFromBridge()
         )
     }
 
-    private fun getDevicesFromBridge(): List<ConnectedAndroidDevice> {
-        return bridge?.let {
-            it.devices.map { iDevice ->
-                ConnectedAndroidDevice(iDevice, null)
-            }
-        } ?: emptyList()
+    private fun getDevicesFromBridge(): List<IDevice> {
+        return bridge?.devices?.toList() ?: emptyList()
     }
 
     override fun dispose() {

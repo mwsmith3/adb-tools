@@ -36,13 +36,12 @@ class DeviceProviderServiceTest : LightJavaCodeInsightFixtureTestCase() {
     }
 
     @Test
-    fun `when bridge future returns error, then state is Error`() {
+    fun `when bridge future returns error, then error emitted`() {
         val error = RuntimeException()
         bridgeProviderService.provider = { _ -> Futures.immediateFailedFuture(error) }
         service = DeviceProviderServiceImpl(project)
 
-        val expectedState = DeviceProviderService.State.Error(error)
-        service.observe().test().assertValue(expectedState)
+        service.observe().test().assertError(error)
     }
 
     @Test
@@ -55,7 +54,7 @@ class DeviceProviderServiceTest : LightJavaCodeInsightFixtureTestCase() {
         service = DeviceProviderServiceImpl(project)
 
         service.observe().test().assertValue {
-            it is DeviceProviderService.State.Success && it.devices.size == 1 && it.devices[0].serial == "mock-serial-number"
+            it.size == 1 && it[0].serialNumber == "mock-serial-number"
         }
     }
 
