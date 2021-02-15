@@ -24,6 +24,10 @@
                         serviceImplementation="com.github.mwsmith3.adbtools.util.AndroidFacetProviderServiceImpl"
                         testServiceImplementation="com.github.mwsmith3.adbtools.util.ExecutorProviderServiceFake"/>
 
+        <projectService serviceInterface="com.github.mwsmith3.adbtools.deeplinks.DeepLinkProviderService"
+                        serviceImplementation="com.github.mwsmith3.adbtools.deeplinks.DeepLinkProviderServiceImpl"
+                        testServiceImplementation="com.github.mwsmith3.adbtools.deeplinks.DeepLinkProviderServiceFake"/>
+
         <toolWindow
                 id="Android Debug Bridge Tools"
                 icon="AllIcons.Toolwindows.ToolWindowBuild"
