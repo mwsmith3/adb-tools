@@ -8,15 +8,22 @@ import com.github.mwsmith3.adbtools.util.ExecutorProviderService
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
 import io.reactivex.rxjava3.schedulers.Schedulers
+import io.reactivex.rxjava3.subjects.BehaviorSubject
 
-class AdbToolsController(val project: Project, private val model: AdbToolsModel, private val view: AdbToolsWindowView) {
-
+class AdbToolsController(
+    project: Project,
+    private val view: AdbToolsWindowView,
+    private val modelSubject: BehaviorSubject<AdbToolsModel>
+) {
     private val deviceProviderService = project.getService(DeviceProviderService::class.java)
     private val executorProvider = ServiceManager.getService(ExecutorProviderService::class.java)
     private val androidFacetProviderService = project.getService(AndroidFacetProviderService::class.java)
     private val deepLinkProviderService = project.getService(DeepLinkProviderService::class.java)
 
+    private var model = AdbToolsModel()
+
     init {
+        modelSubject.onNext(model)
         observeFacets()
         observeDevices()
         observeFacetSelection()
@@ -24,13 +31,15 @@ class AdbToolsController(val project: Project, private val model: AdbToolsModel,
 
     private fun observeFacetSelection() {
         view.facetSelectionObservable
+            .distinctUntilChanged()
             .subscribeOn(Schedulers.from(executorProvider.tasks))
             .map {
                 deepLinkProviderService.getDeepLinks(it)
             }
             .observeOn(Schedulers.from(executorProvider.edt))
-            .subscribe {
-                model.setDeepLinks(it)
+            .subscribe { deepLinks ->
+                model = model.copy(deepLinks = deepLinks)
+                modelSubject.onNext(model)
             }
     }
 
@@ -44,11 +53,13 @@ class AdbToolsController(val project: Project, private val model: AdbToolsModel,
             }
             .observeOn(Schedulers.from(executorProvider.edt))
             .subscribe(
-                {
-                    model.setDevices(it)
+                { devices ->
+                    model = model.copy(adbState = AdbState.Connected(devices))
+                    modelSubject.onNext(model)
                 },
                 {
-                    model.setDevices(emptyList())
+                    model = model.copy(adbState = AdbState.Error)
+                    modelSubject.onNext(model)
                 }
             )
     }
@@ -56,8 +67,9 @@ class AdbToolsController(val project: Project, private val model: AdbToolsModel,
     private fun observeFacets() {
         androidFacetProviderService.observe()
             .subscribeOn(Schedulers.from(executorProvider.edt))
-            .subscribe {
-                model.setFacets(it)
+            .subscribe { facets ->
+                model = model.copy(facets = facets)
+                modelSubject.onNext(model)
             }
     }
 }
