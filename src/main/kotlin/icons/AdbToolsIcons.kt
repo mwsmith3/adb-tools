@@ -11,7 +11,4 @@ object AdbToolsIcons {
 
     @JvmField
     val ClearDataIcon = IconLoader.getIcon("/icons/clean.svg", javaClass)
-
-    @JvmField
-    val DeepLink = IconLoader.getIcon("/icons/deepLink.svg", javaClass)
 }

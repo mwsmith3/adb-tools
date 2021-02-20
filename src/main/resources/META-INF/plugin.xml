@@ -24,10 +24,6 @@
                         serviceImplementation="com.github.mwsmith3.adbtools.util.AndroidFacetProviderServiceImpl"
                         testServiceImplementation="com.github.mwsmith3.adbtools.util.ExecutorProviderServiceFake"/>
 
-        <projectService serviceInterface="com.github.mwsmith3.adbtools.deeplinks.DeepLinkProviderService"
-                        serviceImplementation="com.github.mwsmith3.adbtools.deeplinks.DeepLinkProviderServiceImpl"
-                        testServiceImplementation="com.github.mwsmith3.adbtools.deeplinks.DeepLinkProviderServiceFake"/>
-
         <toolWindow
                 id="Android Debug Bridge Tools"
                 icon="AllIcons.Toolwindows.ToolWindowBuild"
@@ -58,10 +54,6 @@
                     class="com.github.mwsmith3.adbtools.actions.app.ClearDataAndRestartAction" text="Clear Data And Restart"
                     description="Clear data and restart"
                     icon="AdbToolsIcons.ClearDataIcon" />
-            <action id="com.github.mwsmith3.adbtools.deeplink" text="Open DeepLink"
-                    class="com.github.mwsmith3.adbtools.actions.app.OpenDeepLinkAction"
-                    description="Open a deep link"
-                    icon="AdbToolsIcons.DeepLink" />
             <separator/>
             <action id="com.github.mwsmith3.adbtools.actions.settings.EnableDeveloperOptionsAction"
                     class="com.github.mwsmith3.adbtools.actions.settings.EnableDeveloperOptionsAction" text="Enable Developer Options"

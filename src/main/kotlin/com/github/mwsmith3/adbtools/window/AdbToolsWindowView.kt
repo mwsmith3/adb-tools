@@ -3,7 +3,6 @@ package com.github.mwsmith3.adbtools.window
 import com.android.ddmlib.IDevice
 import com.android.tools.idea.run.ConnectedAndroidDevice
 import com.github.mwsmith3.adbtools.util.ExecutorProviderService
-import com.github.mwsmith3.adbtools.util.GetAndroidStrings
 import com.intellij.openapi.actionSystem.ActionManager
 import com.intellij.openapi.actionSystem.ActionPlaces
 import com.intellij.openapi.actionSystem.ActionToolbar
@@ -22,7 +21,6 @@ import com.intellij.util.ui.UIUtil
 import icons.AndroidIcons
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
-import io.reactivex.rxjava3.subjects.PublishSubject
 import org.jetbrains.android.facet.AndroidFacet
 import javax.swing.JCheckBox
 import javax.swing.JTextField
@@ -34,10 +32,6 @@ class AdbToolsWindowView(model: Observable<AdbToolsModel>) :
     SimpleToolWindowPanel(true, false) {
 
     private val executorProvider = ServiceManager.getService(ExecutorProviderService::class.java)
-
-    val facetSelectionObservable: Observable<AndroidFacet>
-        get() = _facetSelectionObservable
-    private val _facetSelectionObservable = PublishSubject.create<AndroidFacet>()
 
     private val deviceComboModel = MutableCollectionComboBoxModel<ConnectedAndroidDevice>()
     private val facetComboModel = MutableCollectionComboBoxModel<AndroidFacet>()
@@ -76,27 +70,7 @@ class AdbToolsWindowView(model: Observable<AdbToolsModel>) :
                     facetComboModel.selectedItem = facet
                 },
                 facetListCellRenderer
-            ).constraints(growX, pushX).component.addActionListener {
-                facetComboModel.selected?.let {
-                    _facetSelectionObservable.onNext(it)
-                }
-            }
-        }
-        row("Deep links") {
-            cell {
-                comboBox(
-                    deepLinkComboModel,
-                    {
-                        deepLinkComboModel.selected
-                    },
-                    {
-                        deepLinkComboModel.selectedItem = it
-                    }
-                ).constraints(growX, pushX)
-            }
-            cell {
-                paramsTextField(growX, pushX).component.toolTipText = "Deep link query parameters"
-            }
+            ).constraints(growX, pushX)
         }
 //        row {
 //            debuggerCheckBox = checkBox("Attach debugger", false).constraints(growX, pushX).component
@@ -127,7 +101,6 @@ class AdbToolsWindowView(model: Observable<AdbToolsModel>) :
             .subscribe(
                 {
                     setFacets(it.facets)
-                    setDeepLinks(it.deepLinks)
                     when (it.adbState) {
                         is AdbState.Loading -> {
                             showLoadingView()
@@ -139,7 +112,8 @@ class AdbToolsWindowView(model: Observable<AdbToolsModel>) :
                             setDevices(it.adbState.devices)
                         }
                     }
-                }, {
+                },
+                {
                     Logger.getInstance(AdbToolsWindowView::class.java).error(it)
                     showErrorView()
                 }
@@ -153,12 +127,6 @@ class AdbToolsWindowView(model: Observable<AdbToolsModel>) :
             noDevicesContent
         }
         setContent(content)
-    }
-
-    private fun getSelectedDeepLink(): String? {
-        return deepLinkComboModel.selected?.let {
-            it + paramsTextField.text
-        }
     }
 
     private fun createActionToolbar(actionId: String): ActionToolbar {
@@ -198,20 +166,11 @@ class AdbToolsWindowView(model: Observable<AdbToolsModel>) :
         }
     }
 
-    private fun setDeepLinks(deepLinks: List<String>) {
-        if (deepLinkComboModel.items == deepLinks) return
-        deepLinkComboModel.replaceAll(deepLinks)
-        if (deepLinks.isNotEmpty()) {
-            deepLinkComboModel.selectedItem = deepLinks[0]
-        }
-    }
-
     override fun getData(dataId: String): Any? {
         return when {
             DEVICE_KEY.`is`(dataId) -> deviceComboModel.selected?.device
             FACET_KEY.`is`(dataId) -> facetComboModel.selected
 //            DEBUGGER_KEY.`is`(dataId) -> debuggerCheckBox.isSelected
-            DEEP_LINK_KEY.`is`(dataId) -> getSelectedDeepLink()
             else -> super.getData(dataId)
         }
     }
@@ -236,7 +195,6 @@ class AdbToolsWindowView(model: Observable<AdbToolsModel>) :
 
     companion object {
         val DEVICE_KEY = DataKey.create<IDevice>("device")
-        val DEEP_LINK_KEY = DataKey.create<String>("deep link")
         val FACET_KEY = DataKey.create<AndroidFacet>("android facet")
 //        val DEBUGGER_KEY = DataKey.create<Boolean>("attach debugger")
 
