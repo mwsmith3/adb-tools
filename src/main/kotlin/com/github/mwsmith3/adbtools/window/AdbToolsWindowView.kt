@@ -19,23 +19,24 @@ import com.intellij.ui.layout.panel
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
 import icons.AndroidIcons
-import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import org.jetbrains.android.facet.AndroidFacet
 import javax.swing.JCheckBox
-import javax.swing.JTextField
+import javax.swing.JComboBox
 import javax.swing.SwingConstants
 import javax.swing.event.ListDataEvent
 import javax.swing.event.ListDataListener
 
-class AdbToolsWindowView(model: Observable<AdbToolsModel>) :
-    SimpleToolWindowPanel(true, false) {
+class AdbToolsWindowView(private val observableModel: ObservableAdbToolsModel) : SimpleToolWindowPanel(true, false) {
 
     private val executorProvider = ServiceManager.getService(ExecutorProviderService::class.java)
 
     private val deviceComboModel = MutableCollectionComboBoxModel<ConnectedAndroidDevice>()
+
     private val facetComboModel = MutableCollectionComboBoxModel<AndroidFacet>()
-    private lateinit var debuggerCheckBox: JCheckBox
+    private lateinit var facetComboComponent: JComboBox<AndroidFacet>
+
+    private var debuggerCheckBox: JCheckBox? = null
 
     private val deviceListCellRenderer = SimpleListCellRenderer.create<ConnectedAndroidDevice>("") {
         it?.name?.replace(Regex("[]]|[\\[]|"), "")?.replace('_', ' ')
@@ -59,7 +60,7 @@ class AdbToolsWindowView(model: Observable<AdbToolsModel>) :
             ).constraints(growX, pushX)
         }
         row("Modules") {
-            comboBox(
+            facetComboComponent = comboBox(
                 facetComboModel,
                 {
                     facetComboModel.selected
@@ -68,7 +69,7 @@ class AdbToolsWindowView(model: Observable<AdbToolsModel>) :
                     facetComboModel.selectedItem = facet
                 },
                 facetListCellRenderer
-            ).constraints(growX, pushX)
+            ).constraints(growX, pushX).component
         }
 //        row {
 //            debuggerCheckBox = checkBox("Attach debugger", false).constraints(growX, pushX).component
@@ -94,12 +95,16 @@ class AdbToolsWindowView(model: Observable<AdbToolsModel>) :
         setContent(false)
         this.toolbar = createActionToolbar("com.github.mwsmith3.adbtools.window.actions").component
         deviceComboModel.addListDataListener(DeviceComboListener())
-        model
+        observeAdbState()
+        observeFacets()
+    }
+
+    private fun observeAdbState() {
+        observableModel.observeAdbState()
             .subscribeOn(Schedulers.from(executorProvider.edt))
             .subscribe(
                 {
-                    setFacets(it.facets)
-                    when (it.adbState) {
+                    when (it) {
                         is AdbState.Loading -> {
                             showLoadingView()
                         }
@@ -107,13 +112,27 @@ class AdbToolsWindowView(model: Observable<AdbToolsModel>) :
                             showErrorView()
                         }
                         is AdbState.Connected -> {
-                            setDevices(it.adbState.devices)
+                            setDevices(it.devices)
                         }
                     }
                 },
                 {
                     Logger.getInstance(AdbToolsWindowView::class.java).error(it)
                     showErrorView()
+                }
+            )
+    }
+
+    private fun observeFacets() {
+        observableModel.observeFacets()
+            .subscribeOn(Schedulers.from(executorProvider.edt))
+            .subscribe(
+                {
+                    facetComboComponent.isEnabled = true
+                    setFacets(it)
+                }, {
+                    Logger.getInstance(AdbToolsWindowView::class.java).error(it)
+                    facetComboComponent.setEnabled(false)
                 }
             )
     }

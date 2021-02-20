@@ -7,17 +7,14 @@ import com.github.mwsmith3.adbtools.util.ExecutorProviderService
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
 import io.reactivex.rxjava3.schedulers.Schedulers
-import io.reactivex.rxjava3.subjects.BehaviorSubject
 
-class AdbToolsController(project: Project, private val modelSubject: BehaviorSubject<AdbToolsModel>) {
+class AdbToolsController(project: Project, private val adbToolsModel: AdbToolsModelSubject) {
+
     private val deviceProviderService = project.getService(DeviceProviderService::class.java)
     private val executorProvider = ServiceManager.getService(ExecutorProviderService::class.java)
     private val androidFacetProviderService = project.getService(AndroidFacetProviderService::class.java)
 
-    private var model = AdbToolsModel()
-
     init {
-        modelSubject.onNext(model)
         observeFacets()
         observeDevices()
     }
@@ -33,12 +30,10 @@ class AdbToolsController(project: Project, private val modelSubject: BehaviorSub
             .observeOn(Schedulers.from(executorProvider.edt))
             .subscribe(
                 { devices ->
-                    model = model.copy(adbState = AdbState.Connected(devices))
-                    modelSubject.onNext(model)
+                    adbToolsModel.emitAdbState(AdbState.Connected(devices))
                 },
                 {
-                    model = model.copy(adbState = AdbState.Error)
-                    modelSubject.onNext(model)
+                    adbToolsModel.emitAdbState(AdbState.Error)
                 }
             )
     }
@@ -47,8 +42,7 @@ class AdbToolsController(project: Project, private val modelSubject: BehaviorSub
         androidFacetProviderService.observe()
             .subscribeOn(Schedulers.from(executorProvider.edt))
             .subscribe { facets ->
-                model = model.copy(facets = facets)
-                modelSubject.onNext(model)
+                adbToolsModel.emitFacets(facets)
             }
     }
 }
