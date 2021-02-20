@@ -130,7 +130,8 @@ class AdbToolsWindowView(private val observableModel: ObservableAdbToolsModel) :
                 {
                     facetComboComponent.isEnabled = true
                     setFacets(it)
-                }, {
+                },
+                {
                     Logger.getInstance(AdbToolsWindowView::class.java).error(it)
                     facetComboComponent.setEnabled(false)
                 }
