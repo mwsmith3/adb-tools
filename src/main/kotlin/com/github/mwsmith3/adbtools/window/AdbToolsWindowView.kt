@@ -35,9 +35,7 @@ class AdbToolsWindowView(model: Observable<AdbToolsModel>) :
 
     private val deviceComboModel = MutableCollectionComboBoxModel<ConnectedAndroidDevice>()
     private val facetComboModel = MutableCollectionComboBoxModel<AndroidFacet>()
-    private val deepLinkComboModel = MutableCollectionComboBoxModel<String>()
     private lateinit var debuggerCheckBox: JCheckBox
-    private val paramsTextField = JTextField("", 1)
 
     private val deviceListCellRenderer = SimpleListCellRenderer.create<ConnectedAndroidDevice>("") {
         it?.name?.replace(Regex("[]]|[\\[]|"), "")?.replace('_', ' ')
