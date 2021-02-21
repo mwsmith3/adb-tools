@@ -1,21 +1,13 @@
 package com.github.mwsmith3.adbtools.command.settings
 
-import com.android.ddmlib.IDevice
-import com.github.mwsmith3.adbtools.adb.GenericReceiver
-import com.github.mwsmith3.adbtools.command.Command
-import com.github.mwsmith3.adbtools.command.Command.Companion.TIMEOUT
-import java.util.concurrent.TimeUnit
+import com.github.mwsmith3.adbtools.command.NoResultCommand
 
-class SetAnimationScalesCommand(private val scale: AnimationScale) : Command<Unit> {
-    override val command: String
+class SetAnimationScalesCommand(private val scale: AnimationScale) : NoResultCommand() {
+    override val adbCommand: String
         get() = "settings put global window_animation_scale ${scale.value} && " +
             "settings put global transition_animation_scale ${scale.value} && " +
             "settings put global animator_duration_scale ${scale.value}"
 
     override val description: String
         get() = "Set animation scale"
-
-    override fun run(device: IDevice) {
-        device.executeShellCommand(command, GenericReceiver(), TIMEOUT, TimeUnit.SECONDS)
-    }
 }

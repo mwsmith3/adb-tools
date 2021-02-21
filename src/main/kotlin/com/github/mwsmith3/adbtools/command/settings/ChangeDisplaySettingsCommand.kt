@@ -1,13 +1,9 @@
 package com.github.mwsmith3.adbtools.command.settings
 
-import com.android.ddmlib.IDevice
-import com.github.mwsmith3.adbtools.adb.GenericReceiver
-import com.github.mwsmith3.adbtools.command.Command
-import com.github.mwsmith3.adbtools.command.Command.Companion.TIMEOUT
-import java.util.concurrent.TimeUnit
+import com.github.mwsmith3.adbtools.command.NoResultCommand
 
-class ChangeDisplaySettingsCommand(private val displaySetting: Display) : Command<Unit> {
-    override val command: String
+class ChangeDisplaySettingsCommand(private val displaySetting: Display) : NoResultCommand() {
+    override val adbCommand: String
         get() = when (displaySetting) {
             is Display.Spec -> "wm size ${displaySetting.x}x${displaySetting.y} && wm density ${displaySetting.density}"
             is Display.Reset -> "wm size reset && wm density reset"
@@ -15,8 +11,4 @@ class ChangeDisplaySettingsCommand(private val displaySetting: Display) : Comman
 
     override val description: String
         get() = "Change display of device"
-
-    override fun run(device: IDevice) {
-        device.executeShellCommand(command, GenericReceiver(), TIMEOUT, TimeUnit.SECONDS)
-    }
 }

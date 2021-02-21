@@ -1,29 +1,24 @@
 package com.github.mwsmith3.adbtools.command.settings
 
-import com.android.ddmlib.IDevice
-import com.github.mwsmith3.adbtools.adb.GenericReceiver
-import com.github.mwsmith3.adbtools.command.Command
-import com.github.mwsmith3.adbtools.command.Command.Companion.TIMEOUT
-import java.util.concurrent.TimeUnit
+import com.github.mwsmith3.adbtools.command.NoResultCommand
 
-class ToggleTalkBackCommand(private val enabled: Boolean) : Command<Unit> {
+class ToggleTalkBackCommand(private val enabled: Boolean) : NoResultCommand() {
 
-    private val putTalkBackCommand = "settings put secure enabled_accessibility_services "
-    private val talkBackOffSetting = "com.android.talkback/com.google.android.marvin.talkback.TalkBackService"
-    private val talkBackOnSetting =
-        "com.google.android.marvin.talkback/com.google.android.marvin.talkback.TalkBackService"
-
-    override val command: String
+    override val adbCommand: String
         get() = if (enabled) {
-            putTalkBackCommand + talkBackOffSetting
+            PUT_TALKBACK_COMMAND + TALKBACK_OFF_SETTING
         } else {
-            putTalkBackCommand + talkBackOnSetting
+            PUT_TALKBACK_COMMAND + TALKBACK_ON_SETTING
         }
 
     override val description: String
         get() = "Toggle TalkBack status"
 
-    override fun run(device: IDevice) {
-        device.executeShellCommand(command, GenericReceiver(), TIMEOUT, TimeUnit.SECONDS)
+    companion object {
+        private const val PUT_TALKBACK_COMMAND = "settings put secure enabled_accessibility_services "
+        private const val TALKBACK_OFF_SETTING =
+            "com.android.talkback/com.google.android.marvin.talkback.TalkBackService"
+        private const val TALKBACK_ON_SETTING =
+            "com.google.android.marvin.talkback/com.google.android.marvin.talkback.TalkBackService"
     }
 }

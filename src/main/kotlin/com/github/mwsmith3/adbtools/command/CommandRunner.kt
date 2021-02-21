@@ -17,7 +17,7 @@ object CommandRunner {
         IOException::class
     )
     fun <T> run(device: IDevice, command: Command<T>): T {
-        NotificationHelper.info("${device.name}: ${command.command}")
+        NotificationHelper.info("${device.name}: ${command.adbCommand}")
         return try {
             command.run(device)
         } catch (e: Exception) {

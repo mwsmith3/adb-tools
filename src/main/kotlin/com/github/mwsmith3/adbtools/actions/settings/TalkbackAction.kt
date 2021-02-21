@@ -20,7 +20,7 @@ class TalkbackAction : AdbAction() {
                 val talkBackInstalled =
                     CommandRunner.run(device, GetPackageInstalledCommand("com.google.android.marvin.talkback"))
                 if (talkBackInstalled) {
-                    val talkBackEnabled = CommandRunner.run(device, GetTalkBackEnabledCommand)
+                    val talkBackEnabled = CommandRunner.run(device, GetTalkBackEnabledCommand())
                     CommandRunner.run(device, ToggleTalkBackCommand(talkBackEnabled))
                 } else {
                     NotificationHelper.confirmAction(
@@ -30,7 +30,7 @@ class TalkbackAction : AdbAction() {
                         "Go to Google Play"
                     ) {
                         execute {
-                            CommandRunner.run(device, GoToTalkBackGooglePlayCommand)
+                            CommandRunner.run(device, GoToTalkBackGooglePlayCommand())
                         }
                     }
                 }

@@ -12,7 +12,7 @@ class EnableDeveloperOptionsAction : AdbAction() {
 
         if (project != null && device != null) {
             execute {
-                CommandRunner.run(device, EnableDeveloperOptionsCommand)
+                CommandRunner.run(device, EnableDeveloperOptionsCommand())
             }
         }
     }

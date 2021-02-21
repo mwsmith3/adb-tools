@@ -1,19 +1,12 @@
 package com.github.mwsmith3.adbtools.command
 
-import com.android.ddmlib.IDevice
-import com.github.mwsmith3.adbtools.adb.GenericReceiver
-import com.github.mwsmith3.adbtools.command.Command.Companion.TIMEOUT
-import java.util.concurrent.TimeUnit
-
-class GetPackageInstalledCommand(private val packageName: String) : Command<Boolean> {
-    override val command: String
+class GetPackageInstalledCommand(private val packageName: String) : Command<Boolean>() {
+    override val adbCommand: String
         get() = "pm list packages $packageName"
     override val description: String
         get() = "Get Package Installed"
 
-    override fun run(device: IDevice): Boolean {
-        val receiver = GenericReceiver()
-        device.executeShellCommand("pm list packages $packageName", receiver, TIMEOUT, TimeUnit.SECONDS)
-        return receiver.shellOutput.contains("package:$packageName")
+    override fun resolve(): Boolean {
+        return output.contains("package:$packageName")
     }
 }
