@@ -6,13 +6,19 @@ import com.github.mwsmith3.adbtools.util.AndroidFacetProviderService
 import com.github.mwsmith3.adbtools.util.ExecutorProviderService
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
+import io.reactivex.rxjava3.subjects.BehaviorSubject
 
-class AdbToolsController(project: Project, private val adbToolsModel: AdbToolsModelSubject) {
+class AdbToolsController(project: Project) {
 
     private val deviceProviderService = project.getService(DeviceProviderService::class.java)
     private val executorProvider = ServiceManager.getService(ExecutorProviderService::class.java)
     private val androidFacetProviderService = project.getService(AndroidFacetProviderService::class.java)
+
+    private val _model = BehaviorSubject.createDefault(AdbToolsModel(AdbState.Loading, emptyList()))
+    val model: Observable<AdbToolsModel>
+        get() = _model
 
     init {
         observeFacets()
@@ -30,10 +36,14 @@ class AdbToolsController(project: Project, private val adbToolsModel: AdbToolsMo
             .observeOn(Schedulers.from(executorProvider.edt))
             .subscribe(
                 { devices ->
-                    adbToolsModel.emitAdbState(AdbState.Connected(devices))
+                    updateAndEmit {
+                        it.copy(adbState = AdbState.Connected(devices))
+                    }
                 },
                 {
-                    adbToolsModel.emitAdbState(AdbState.Error)
+                    updateAndEmit {
+                        it.copy(adbState = AdbState.Error)
+                    }
                 }
             )
     }
@@ -41,8 +51,22 @@ class AdbToolsController(project: Project, private val adbToolsModel: AdbToolsMo
     private fun observeFacets() {
         androidFacetProviderService.observe()
             .subscribeOn(Schedulers.from(executorProvider.edt))
-            .subscribe { facets ->
-                adbToolsModel.emitFacets(facets)
-            }
+            .subscribe(
+                { facets ->
+                    updateAndEmit {
+                        it.copy(facets = facets)
+                    }
+                },
+                {
+                    updateAndEmit {
+                        it.copy(facets = emptyList())
+                    }
+                }
+            )
+    }
+
+    private fun updateAndEmit(transform: (AdbToolsModel) -> AdbToolsModel) {
+        val newState = transform(_model.value)
+        _model.onNext(newState)
     }
 }

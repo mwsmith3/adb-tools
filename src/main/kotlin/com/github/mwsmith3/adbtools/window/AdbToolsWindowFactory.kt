@@ -8,9 +8,8 @@ import com.intellij.openapi.wm.ToolWindowFactory
 class AdbToolsWindowFactory : ToolWindowFactory, DumbAware {
 
     override fun createToolWindowContent(project: Project, toolWindow: ToolWindow) {
-        val model = AdbToolsModel()
-        val view = AdbToolsWindowView(model)
-        AdbToolsController(project, model)
+        val controller = AdbToolsController(project)
+        val view = AdbToolsWindowView(controller.model)
 
         val contentFactory = toolWindow.contentManager.factory
         val content = contentFactory.createContent(view, "", false)

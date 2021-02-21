@@ -19,6 +19,7 @@ import com.intellij.ui.layout.panel
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
 import icons.AndroidIcons
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import org.jetbrains.android.facet.AndroidFacet
 import javax.swing.JCheckBox
@@ -27,7 +28,7 @@ import javax.swing.SwingConstants
 import javax.swing.event.ListDataEvent
 import javax.swing.event.ListDataListener
 
-class AdbToolsWindowView(private val observableModel: ObservableAdbToolsModel) : SimpleToolWindowPanel(true, false) {
+class AdbToolsWindowView(private val model: Observable<AdbToolsModel>) : SimpleToolWindowPanel(true, false) {
 
     private val executorProvider = ServiceManager.getService(ExecutorProviderService::class.java)
 
@@ -95,26 +96,16 @@ class AdbToolsWindowView(private val observableModel: ObservableAdbToolsModel) :
         setContent(false)
         this.toolbar = createActionToolbar("com.github.mwsmith3.adbtools.window.actions").component
         deviceComboModel.addListDataListener(DeviceComboListener())
-        observeAdbState()
-        observeFacets()
+        observeModel()
     }
 
-    private fun observeAdbState() {
-        observableModel.observeAdbState()
+    private fun observeModel() {
+        model
             .subscribeOn(Schedulers.from(executorProvider.edt))
             .subscribe(
                 {
-                    when (it) {
-                        is AdbState.Loading -> {
-                            showLoadingView()
-                        }
-                        is AdbState.Error -> {
-                            showErrorView()
-                        }
-                        is AdbState.Connected -> {
-                            setDevices(it.devices)
-                        }
-                    }
+                    setAdbState(it.adbState)
+                    setFacets(it.facets)
                 },
                 {
                     Logger.getInstance(AdbToolsWindowView::class.java).error(it)
@@ -123,19 +114,18 @@ class AdbToolsWindowView(private val observableModel: ObservableAdbToolsModel) :
             )
     }
 
-    private fun observeFacets() {
-        observableModel.observeFacets()
-            .subscribeOn(Schedulers.from(executorProvider.edt))
-            .subscribe(
-                {
-                    facetComboComponent.isEnabled = true
-                    setFacets(it)
-                },
-                {
-                    Logger.getInstance(AdbToolsWindowView::class.java).error(it)
-                    facetComboComponent.setEnabled(false)
-                }
-            )
+    private fun setAdbState(state: AdbState) {
+        when (state) {
+            is AdbState.Loading -> {
+                showLoadingView()
+            }
+            is AdbState.Error -> {
+                showErrorView()
+            }
+            is AdbState.Connected -> {
+                setDevices(state.devices)
+            }
+        }
     }
 
     private fun setContent(connectedDevices: Boolean) {

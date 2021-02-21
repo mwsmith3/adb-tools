@@ -18,11 +18,12 @@
                             testServiceImplementation="com.github.mwsmith3.adbtools.util.ExecutorProviderServiceFake"/>
 
         <projectService serviceInterface="com.github.mwsmith3.adbtools.device.DeviceProviderService"
-                        serviceImplementation="com.github.mwsmith3.adbtools.device.DeviceProviderServiceImpl"/>
+                        serviceImplementation="com.github.mwsmith3.adbtools.device.DeviceProviderServiceImpl"
+                        testServiceImplementation="com.github.mwsmith3.adbtools.device.DeviceProviderServiceFake"/>
 
         <projectService serviceInterface="com.github.mwsmith3.adbtools.util.AndroidFacetProviderService"
                         serviceImplementation="com.github.mwsmith3.adbtools.util.AndroidFacetProviderServiceImpl"
-                        testServiceImplementation="com.github.mwsmith3.adbtools.util.ExecutorProviderServiceFake"/>
+                        testServiceImplementation="com.github.mwsmith3.adbtools.util.AndroidFacetProviderServiceFake"/>
 
         <toolWindow
                 id="Android Debug Bridge Tools"
