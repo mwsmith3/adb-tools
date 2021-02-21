@@ -5,7 +5,7 @@ import com.github.mwsmith3.adbtools.actions.AdbAction
 import com.github.mwsmith3.adbtools.command.CommandRunner
 import com.github.mwsmith3.adbtools.command.Result
 import com.github.mwsmith3.adbtools.command.app.ClearDataAndRestartPackageCommand
-import com.github.mwsmith3.adbtools.util.NotificationHelper
+import com.github.mwsmith3.adbtools.util.Notifications
 import com.intellij.openapi.actionSystem.AnActionEvent
 
 class ClearDataAndRestartAction : AdbAction() {
@@ -15,6 +15,7 @@ class ClearDataAndRestartAction : AdbAction() {
         val device = getDevice(event) ?: return
         val packageName = getPackageName(event) ?: return
         val facet = getFacet(event) ?: return
+        val project = event.project
 
         try {
             val activityName = getDefaultActivityName(facet, device)
@@ -27,11 +28,11 @@ class ClearDataAndRestartAction : AdbAction() {
                     )
                 )
                 if (result is Result.Error) {
-                    NotificationHelper.commandError(result.message)
+                    Notifications.error("adb command executed with errors: $result.message", project)
                 }
             }
         } catch (e: ActivityLocator.ActivityLocatorException) {
-            NotificationHelper.error("Unable to locate default activity for package $packageName")
+            Notifications.error("Unable to locate default activity for package $packageName", project)
         }
     }
 }

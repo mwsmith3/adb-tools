@@ -2,7 +2,7 @@ package com.github.mwsmith3.adbtools.actions.app
 
 import com.android.ddmlib.InstallException
 import com.github.mwsmith3.adbtools.actions.AdbAction
-import com.github.mwsmith3.adbtools.util.NotificationHelper
+import com.github.mwsmith3.adbtools.util.Notifications
 import com.intellij.openapi.actionSystem.AnActionEvent
 
 class UninstallAction : AdbAction() {
@@ -16,12 +16,15 @@ class UninstallAction : AdbAction() {
                 try {
                     val errorCode = device.uninstallPackage(packageName)
                     if (errorCode == null) {
-                        NotificationHelper.info("$packageName uninstalled on ${device.name}")
+                        Notifications.info("$packageName uninstalled on ${device.name}", project)
                     } else {
-                        NotificationHelper.error("$packageName is not installed on ${device.name}")
+                        Notifications.error("$packageName is not installed on ${device.name}", project)
                     }
                 } catch (e: InstallException) {
-                    NotificationHelper.error("Uninstalled failure for $packageName, on ${device.name}: ${e.message}")
+                    Notifications.error(
+                        "Uninstalled failure for $packageName, on ${device.name}: ${e.message}",
+                        project
+                    )
                 }
             }
         }

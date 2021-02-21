@@ -1,13 +1,17 @@
 package com.github.mwsmith3.adbtools.actions.settings
 
+import com.android.ddmlib.IDevice
 import com.github.mwsmith3.adbtools.actions.AdbAction
 import com.github.mwsmith3.adbtools.command.CommandRunner
 import com.github.mwsmith3.adbtools.command.GetPackageInstalledCommand
 import com.github.mwsmith3.adbtools.command.settings.GetTalkBackEnabledCommand
 import com.github.mwsmith3.adbtools.command.settings.GoToTalkBackGooglePlayCommand
 import com.github.mwsmith3.adbtools.command.settings.ToggleTalkBackCommand
-import com.github.mwsmith3.adbtools.util.NotificationHelper
+import com.github.mwsmith3.adbtools.util.Notifications
+import com.intellij.notification.NotificationAction
+import com.intellij.notification.NotificationType
 import com.intellij.openapi.actionSystem.AnActionEvent
+import com.intellij.openapi.project.Project
 
 class TalkbackAction : AdbAction() {
 
@@ -23,18 +27,25 @@ class TalkbackAction : AdbAction() {
                     val talkBackEnabled = CommandRunner.run(device, GetTalkBackEnabledCommand())
                     CommandRunner.run(device, ToggleTalkBackCommand(talkBackEnabled))
                 } else {
-                    NotificationHelper.confirmAction(
-                        project,
-                        "TalkBack not installed",
-                        "Do you want to install TalkBack?",
-                        "Go to Google Play"
-                    ) {
-                        execute {
-                            CommandRunner.run(device, GoToTalkBackGooglePlayCommand())
-                        }
-                    }
+                    showNotification(project, device)
                 }
             }
         }
+    }
+
+    private fun showNotification(project: Project, device: IDevice) {
+        val notification = Notifications.STICKY_GROUP.createNotification(
+            "TalkBack not installed",
+            "Do you want to install TalkBack?",
+            NotificationType.WARNING
+        )
+        val notificationAction = NotificationAction.createSimple("Go to Google Play") {
+            execute {
+                CommandRunner.run(device, GoToTalkBackGooglePlayCommand())
+            }
+            notification.expire()
+        }
+        notification.addAction(notificationAction)
+        notification.notify(project)
     }
 }
