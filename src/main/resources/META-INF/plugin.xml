@@ -36,24 +36,24 @@
     <actions>
         <group id="com.github.mwsmith3.adbtools.window.actions" text="ADB App Actions">
             <action id="com.github.mwsmith3.adbtools.actions.app.StartDefaultActivityAction"
-                    class="com.github.mwsmith3.adbtools.actions.app.StartDefaultActivityAction" text="Start Default Activity"
-                    description="Start default activity"
+                    class="com.github.mwsmith3.adbtools.actions.app.StartDefaultActivityAction" text="Start App"
+                    description="Start app"
                     icon="AllIcons.Actions.Execute" />
             <action id="com.github.mwsmith3.adbtools.actions.app.RestartAction"
-                    class="com.github.mwsmith3.adbtools.actions.app.RestartAction" text="Restart Default Activity"
-                    description="Restart default activity"
+                    class="com.github.mwsmith3.adbtools.actions.app.RestartAction" text="Restart App"
+                    description="Restart app"
                     icon="AllIcons.Actions.Restart" />
             <action id="com.github.mwsmith3.adbtools.actions.app.StopAppAction"
-                    class="com.github.mwsmith3.adbtools.actions.app.StopAppAction" text="Kill App"
-                    description="Kill app"
+                    class="com.github.mwsmith3.adbtools.actions.app.StopAppAction" text="Stop App"
+                    description="Stop app"
                     icon="AllIcons.Debugger.KillProcess" />
             <action id="com.github.mwsmith3.adbtools.actions.app.UninstallAction"
                     class="com.github.mwsmith3.adbtools.actions.app.UninstallAction" text="Uninstall App"
                     description="Uninstall app"
                     icon="AllIcons.Actions.Uninstall" />
             <action id="com.github.mwsmith3.adbtools.actions.app.ClearDataAndRestartAction"
-                    class="com.github.mwsmith3.adbtools.actions.app.ClearDataAndRestartAction" text="Clear Data And Restart"
-                    description="Clear data and restart"
+                    class="com.github.mwsmith3.adbtools.actions.app.ClearDataAndRestartAction" text="Clear Data And Restart App"
+                    description="Clear data and restart app"
                     icon="AdbToolsIcons.ClearDataIcon" />
             <separator/>
             <action id="com.github.mwsmith3.adbtools.actions.settings.EnableDeveloperOptionsAction"
@@ -62,7 +62,7 @@
                     icon="AllIcons.Json.Object" />
             <action id="com.github.mwsmith3.adbtools.actions.settings.TalkbackAction"
                     class="com.github.mwsmith3.adbtools.actions.settings.TalkbackAction" text="Toggle TalkBack"
-                    description="Toggle TalkBack on a Android device"
+                    description="Toggle talkBack"
                     icon="AdbToolsIcons.AccessibilityIcon" />
             <action id="com.github.mwsmith3.adbtools.actions.settings.ChangeDisplaySettingsAction"
                     class="com.github.mwsmith3.adbtools.actions.settings.ChangeDisplaySettingsAction" text="Change Device Resolution"
