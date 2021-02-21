@@ -43,8 +43,8 @@
                     class="com.github.mwsmith3.adbtools.actions.app.RestartAction" text="Restart Default Activity"
                     description="Restart default activity"
                     icon="AllIcons.Actions.Restart" />
-            <action id="com.github.mwsmith3.adbtools.actions.app.KillAction"
-                    class="com.github.mwsmith3.adbtools.actions.app.KillAction" text="Kill App"
+            <action id="com.github.mwsmith3.adbtools.actions.app.StopAppAction"
+                    class="com.github.mwsmith3.adbtools.actions.app.StopAppAction" text="Kill App"
                     description="Kill app"
                     icon="AllIcons.Debugger.KillProcess" />
             <action id="com.github.mwsmith3.adbtools.actions.app.UninstallAction"

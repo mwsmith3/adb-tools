@@ -2,10 +2,10 @@ package com.github.mwsmith3.adbtools.actions.app
 
 import com.github.mwsmith3.adbtools.actions.AdbAction
 import com.github.mwsmith3.adbtools.command.CommandRunner
-import com.github.mwsmith3.adbtools.command.app.KillPackageCommand
+import com.github.mwsmith3.adbtools.command.app.ForceStopAppCommand
 import com.intellij.openapi.actionSystem.AnActionEvent
 
-class KillAction : AdbAction() {
+class StopAppAction : AdbAction() {
     override fun actionPerformed(event: AnActionEvent) {
         val device = getDevice(event)
         val project = event.project
@@ -13,7 +13,7 @@ class KillAction : AdbAction() {
 
         if (project != null && device != null && packageName != null) {
             execute {
-                CommandRunner.run(device, KillPackageCommand(packageName))
+                CommandRunner.run(device, ForceStopAppCommand(packageName))
             }
         }
     }
