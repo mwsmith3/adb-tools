@@ -4,13 +4,15 @@ import com.android.tools.idea.run.ConnectedAndroidDevice
 import com.github.mwsmith3.adbtools.device.DeviceProviderService
 import com.github.mwsmith3.adbtools.util.AndroidFacetProviderService
 import com.github.mwsmith3.adbtools.util.ExecutorProviderService
+import com.intellij.openapi.Disposable
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 
-class AdbToolsController(project: Project) {
+class AdbToolsController(project: Project) : Disposable {
 
     private val deviceProviderService = project.getService(DeviceProviderService::class.java)
     private val executorProvider = ServiceManager.getService(ExecutorProviderService::class.java)
@@ -20,32 +22,36 @@ class AdbToolsController(project: Project) {
     val model: Observable<AdbToolsModel>
         get() = _model
 
+    private val disposables = CompositeDisposable()
+
     init {
         observeFacets()
         observeDevices()
     }
 
     private fun observeDevices() {
-        deviceProviderService.observe()
-            .subscribeOn(Schedulers.from(executorProvider.tasks))
-            .map { iDeviceList ->
-                iDeviceList.map { iDevice ->
-                    ConnectedAndroidDevice(iDevice, null)
-                }
-            }
-            .observeOn(Schedulers.from(executorProvider.edt))
-            .subscribe(
-                { devices ->
-                    updateAndEmit {
-                        it.copy(adbState = AdbState.Connected(devices))
-                    }
-                },
-                {
-                    updateAndEmit {
-                        it.copy(adbState = AdbState.Error)
+        disposables.add(
+            deviceProviderService.observe()
+                .subscribeOn(Schedulers.from(executorProvider.tasks))
+                .map { iDeviceList ->
+                    iDeviceList.map { iDevice ->
+                        ConnectedAndroidDevice(iDevice, null)
                     }
                 }
-            )
+                .observeOn(Schedulers.from(executorProvider.edt))
+                .subscribe(
+                    { devices ->
+                        updateAndEmit {
+                            it.copy(adbState = AdbState.Connected(devices))
+                        }
+                    },
+                    {
+                        updateAndEmit {
+                            it.copy(adbState = AdbState.Error)
+                        }
+                    }
+                )
+        )
     }
 
     private fun observeFacets() {
@@ -68,5 +74,9 @@ class AdbToolsController(project: Project) {
     private fun updateAndEmit(transform: (AdbToolsModel) -> AdbToolsModel) {
         val newState = transform(_model.value)
         _model.onNext(newState)
+    }
+
+    override fun dispose() {
+        disposables.clear()
     }
 }

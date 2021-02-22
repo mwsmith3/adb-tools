@@ -13,6 +13,8 @@ class AdbToolsWindowFactory : ToolWindowFactory, DumbAware {
 
         val contentFactory = toolWindow.contentManager.factory
         val content = contentFactory.createContent(view, "", false)
+        content.setDisposer(controller)
+        content.setDisposer(view)
         toolWindow.contentManager.addContent(content)
     }
 }

@@ -3,6 +3,7 @@ package com.github.mwsmith3.adbtools.window
 import com.android.ddmlib.IDevice
 import com.android.tools.idea.run.ConnectedAndroidDevice
 import com.github.mwsmith3.adbtools.util.ExecutorProviderService
+import com.intellij.openapi.Disposable
 import com.intellij.openapi.actionSystem.ActionManager
 import com.intellij.openapi.actionSystem.ActionPlaces
 import com.intellij.openapi.actionSystem.ActionToolbar
@@ -20,6 +21,7 @@ import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
 import icons.AndroidIcons
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import org.jetbrains.android.facet.AndroidFacet
 import javax.swing.JCheckBox
@@ -28,9 +30,12 @@ import javax.swing.SwingConstants
 import javax.swing.event.ListDataEvent
 import javax.swing.event.ListDataListener
 
-class AdbToolsWindowView(private val model: Observable<AdbToolsModel>) : SimpleToolWindowPanel(true, false) {
+class AdbToolsWindowView(private val model: Observable<AdbToolsModel>) :
+    SimpleToolWindowPanel(true, false), Disposable {
 
     private val executorProvider = ServiceManager.getService(ExecutorProviderService::class.java)
+
+    private val disposables = CompositeDisposable()
 
     private val deviceComboModel = MutableCollectionComboBoxModel<ConnectedAndroidDevice>()
 
@@ -100,18 +105,20 @@ class AdbToolsWindowView(private val model: Observable<AdbToolsModel>) : SimpleT
     }
 
     private fun observeModel() {
-        model
-            .subscribeOn(Schedulers.from(executorProvider.edt))
-            .subscribe(
-                {
-                    setAdbState(it.adbState)
-                    setFacets(it.facets)
-                },
-                {
-                    Logger.getInstance(AdbToolsWindowView::class.java).error(it)
-                    showErrorView()
-                }
-            )
+        disposables.add(
+            model
+                .subscribeOn(Schedulers.from(executorProvider.edt))
+                .subscribe(
+                    {
+                        setAdbState(it.adbState)
+                        setFacets(it.facets)
+                    },
+                    {
+                        Logger.getInstance(AdbToolsWindowView::class.java).error(it)
+                        showErrorView()
+                    }
+                )
+        )
     }
 
     private fun setAdbState(state: AdbState) {
@@ -207,5 +214,9 @@ class AdbToolsWindowView(private val model: Observable<AdbToolsModel>) : SimpleT
 //        val DEBUGGER_KEY = DataKey.create<Boolean>("attach debugger")
 
         private const val NO_DEVICES_FONT_TEXT_SIZE = 13f
+    }
+
+    override fun dispose() {
+        disposables.clear()
     }
 }
