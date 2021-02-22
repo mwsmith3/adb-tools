@@ -24,7 +24,6 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import org.jetbrains.android.facet.AndroidFacet
-import javax.swing.JCheckBox
 import javax.swing.JComboBox
 import javax.swing.SwingConstants
 import javax.swing.event.ListDataEvent
