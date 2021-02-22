@@ -42,8 +42,6 @@ class AdbToolsWindowView(private val model: Observable<AdbToolsModel>) :
     private val facetComboModel = MutableCollectionComboBoxModel<AndroidFacet>()
     private lateinit var facetComboComponent: JComboBox<AndroidFacet>
 
-    private var debuggerCheckBox: JCheckBox? = null
-
     private val deviceListCellRenderer = SimpleListCellRenderer.create<ConnectedAndroidDevice>("") {
         it?.name?.replace(Regex("[]]|[\\[]|"), "")?.replace('_', ' ')
     }
@@ -77,10 +75,6 @@ class AdbToolsWindowView(private val model: Observable<AdbToolsModel>) :
                 facetListCellRenderer
             ).constraints(growX, pushX).component
         }
-//        row {
-//            debuggerCheckBox = checkBox("Attach debugger", false).constraints(growX, pushX).component
-//            debuggerCheckBox.isEnabled = false
-//        }
     }
 
     private val noDevicesContent = panel(LCFlags.fill) {
@@ -185,7 +179,6 @@ class AdbToolsWindowView(private val model: Observable<AdbToolsModel>) :
         return when {
             DEVICE_KEY.`is`(dataId) -> deviceComboModel.selected?.device
             FACET_KEY.`is`(dataId) -> facetComboModel.selected
-//            DEBUGGER_KEY.`is`(dataId) -> debuggerCheckBox.isSelected
             else -> super.getData(dataId)
         }
     }
@@ -211,8 +204,6 @@ class AdbToolsWindowView(private val model: Observable<AdbToolsModel>) :
     companion object {
         val DEVICE_KEY = DataKey.create<IDevice>("device")
         val FACET_KEY = DataKey.create<AndroidFacet>("android facet")
-//        val DEBUGGER_KEY = DataKey.create<Boolean>("attach debugger")
-
         private const val NO_DEVICES_FONT_TEXT_SIZE = 13f
     }
 
