@@ -65,8 +65,8 @@
                     description="Toggle talkBack"
                     icon="AdbToolsIcons.AccessibilityIcon" />
             <action id="com.github.mwsmith3.adbtools.actions.settings.ChangeDisplaySettingsAction"
-                    class="com.github.mwsmith3.adbtools.actions.settings.ChangeDisplaySettingsAction" text="Change Device Resolution"
-                    description="Change device resolution"
+                    class="com.github.mwsmith3.adbtools.actions.settings.ChangeDisplaySettingsAction" text="Change Device Display Settings"
+                    description="Change device screen size and density"
                     icon="AdbToolsIcons.ScreenIcon" />
             <action id="com.github.mwsmith3.adbtools.actions.settings.SetAnimationScalesAction"
                     class="com.github.mwsmith3.adbtools.actions.settings.SetAnimationScalesAction" text="Set Animation Scales"
