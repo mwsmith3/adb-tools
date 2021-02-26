@@ -26,7 +26,7 @@
                         testServiceImplementation="com.github.mwsmith3.adbtools.util.AndroidFacetProviderServiceFake"/>
 
         <toolWindow
-                id="Android Debug Bridge Tools"
+                id="ADB Tools"
                 icon="AllIcons.Toolwindows.ToolWindowBuild"
                 anchor="left"
                 secondary="true"
