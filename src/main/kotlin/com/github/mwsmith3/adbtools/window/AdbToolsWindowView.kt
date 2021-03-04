@@ -42,7 +42,7 @@ class AdbToolsWindowView(private val model: Observable<AdbToolsModel>) :
     private lateinit var facetComboComponent: JComboBox<AndroidFacet>
 
     private val deviceListCellRenderer = SimpleListCellRenderer.create<ConnectedAndroidDevice>("") {
-        it?.name?.replace(Regex("[]]|[\\[]|"), "")?.replace('_', ' ')
+        it?.serial?.replace(Regex("[]]|[\\[]|"), "")?.replace('_', ' ')
     }
 
     private val facetListCellRenderer = SimpleListCellRenderer.create<AndroidFacet>("") {
