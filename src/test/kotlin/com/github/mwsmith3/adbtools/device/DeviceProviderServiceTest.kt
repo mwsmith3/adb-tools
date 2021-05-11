@@ -31,8 +31,6 @@ class DeviceProviderServiceTest : LightJavaCodeInsightFixtureTestCase() {
     @After
     fun after() {
         super.tearDown()
-        service.dispose()
-        bridgeProviderService.provider = null
     }
 
     @Test
