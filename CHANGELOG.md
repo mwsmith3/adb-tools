@@ -5,6 +5,10 @@
 ## [Unreleased]
 - N/A
 
+## [0.2.3]
+- Updated for AS 4.2
+
+
 ## [0.2.2]
 - Swapped height/width values for tablet devices in Display settings
 - Changed the device ComboBox renderer to use shorter name for the connected Android device
