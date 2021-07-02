@@ -2,6 +2,7 @@
     <id>com.github.mwsmith3.adbtools</id>
     <name>ADB Tools</name>
     <vendor>Matthew Smith</vendor>
+    <idea-version since-build="202"/>
 
     <!-- Product and plugin compatibility requirements -->
     <!-- https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html -->
