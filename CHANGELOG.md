@@ -7,6 +7,7 @@
 
 ## [0.2.4]
 - Removed until-build build range requirement
+- Removed no device image as it did not fit correctly in windowed mode
 
 ## [0.2.3]
 - Updated for AS 4.2
