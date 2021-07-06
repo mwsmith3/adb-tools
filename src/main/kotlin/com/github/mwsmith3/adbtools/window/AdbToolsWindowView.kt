@@ -19,7 +19,6 @@ import com.intellij.ui.layout.LCFlags
 import com.intellij.ui.layout.panel
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
-import icons.AndroidIcons
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -85,7 +84,6 @@ class AdbToolsWindowView(private val model: Observable<AdbToolsModel>) :
         row {
             val emptyLabel = label("No devices connected")
                 .constraints(CCFlags.grow).component
-            emptyLabel.icon = AndroidIcons.DeviceExplorer.DevicesLineup
             emptyLabel.horizontalAlignment = SwingConstants.CENTER
             emptyLabel.horizontalTextPosition = SwingConstants.CENTER
             emptyLabel.verticalAlignment = SwingConstants.CENTER
