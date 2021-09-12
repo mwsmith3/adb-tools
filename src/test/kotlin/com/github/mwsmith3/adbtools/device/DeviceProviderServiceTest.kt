@@ -5,7 +5,6 @@ import com.android.ddmlib.IDevice
 import com.google.common.util.concurrent.Futures
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase
-import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -24,13 +23,7 @@ class DeviceProviderServiceTest : LightJavaCodeInsightFixtureTestCase() {
 
     @Before
     fun before() {
-        super.setUp()
         bridgeProviderService = ServiceManager.getService(BridgeProviderService::class.java) as BridgeProviderServiceFake
-    }
-
-    @After
-    fun after() {
-        super.tearDown()
     }
 
     @Test

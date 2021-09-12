@@ -8,7 +8,6 @@ import com.github.mwsmith3.adbtools.util.AndroidFacetProviderServiceFake
 import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase
 import io.reactivex.rxjava3.core.Observable
 import org.jetbrains.android.facet.AndroidFacet
-import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -23,15 +22,9 @@ class AdbToolsControllerTest : LightJavaCodeInsightFixtureTestCase() {
 
     @Before
     fun before() {
-        super.setUp()
         facetProviderServiceFake =
             project.getService(AndroidFacetProviderService::class.java) as AndroidFacetProviderServiceFake
         deviceProviderServiceFake = project.getService(DeviceProviderService::class.java) as DeviceProviderServiceFake
-    }
-
-    @After
-    fun after() {
-        super.tearDown()
     }
 
     @Test
