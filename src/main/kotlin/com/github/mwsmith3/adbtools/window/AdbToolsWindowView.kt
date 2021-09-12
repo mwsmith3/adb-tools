@@ -35,16 +35,16 @@ class AdbToolsWindowView(private val model: Observable<AdbToolsModel>) :
 
     private val disposables = CompositeDisposable()
 
-    private val deviceComboModel = MutableCollectionComboBoxModel<ConnectedAndroidDevice>()
+    private val deviceComboModel = MutableCollectionComboBoxModel<Pair<ConnectedAndroidDevice, IDevice>>()
 
     private val facetComboModel = MutableCollectionComboBoxModel<AndroidFacet>()
     private lateinit var facetComboComponent: JComboBox<AndroidFacet>
 
-    private val deviceListCellRenderer = SimpleListCellRenderer.create<ConnectedAndroidDevice>("") {
-        val name = if (it.isVirtual) {
-            it.serial
+    private val deviceListCellRenderer = SimpleListCellRenderer.create<Pair<ConnectedAndroidDevice, IDevice>>("") {
+        val name = if (it.first.isVirtual) {
+            it.first.serial
         } else {
-            it.name
+            it.first.name
         }
         name.replace(Regex("[]]|[\\[]|"), "").replace('_', ' ')
     }
@@ -156,10 +156,10 @@ class AdbToolsWindowView(private val model: Observable<AdbToolsModel>) :
 //        throw NotImplementedError()
     }
 
-    private fun setDevices(devices: List<ConnectedAndroidDevice>) {
+    private fun setDevices(devices: List<Pair<ConnectedAndroidDevice, IDevice>>) {
         val newSelection = if (devices.isNotEmpty()) {
             val selected = deviceComboModel.selected
-            devices.find { selected?.serial == it.serial } ?: devices[0]
+            devices.find { selected?.first?.serial == it.first.serial } ?: devices[0]
         } else {
             null
         }
@@ -179,7 +179,7 @@ class AdbToolsWindowView(private val model: Observable<AdbToolsModel>) :
 
     override fun getData(dataId: String): Any? {
         return when {
-            DEVICE_KEY.`is`(dataId) -> deviceComboModel.selected?.device
+            DEVICE_KEY.`is`(dataId) -> deviceComboModel.selected?.second
             FACET_KEY.`is`(dataId) -> facetComboModel.selected
             else -> super.getData(dataId)
         }

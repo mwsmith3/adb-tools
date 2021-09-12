@@ -61,7 +61,7 @@ class AdbToolsControllerTest : LightJavaCodeInsightFixtureTestCase() {
 
         controller.model.test().assertValue {
             val state = it.adbState
-            state is AdbState.Connected && state.devices.size == 1 && state.devices[0].device == device2
+            state is AdbState.Connected && state.devices.size == 1 && state.devices[0].second == device2
         }
     }
 

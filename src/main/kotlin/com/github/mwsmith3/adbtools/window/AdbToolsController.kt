@@ -35,7 +35,7 @@ class AdbToolsController(project: Project) : Disposable {
                 .subscribeOn(Schedulers.from(executorProvider.tasks))
                 .map { iDeviceList ->
                     iDeviceList.map { iDevice ->
-                        ConnectedAndroidDevice(iDevice, null)
+                        Pair(ConnectedAndroidDevice(iDevice, null), iDevice)
                     }
                 }
                 .observeOn(Schedulers.from(executorProvider.edt))
@@ -72,7 +72,8 @@ class AdbToolsController(project: Project) : Disposable {
     }
 
     private fun updateAndEmit(transform: (AdbToolsModel) -> AdbToolsModel) {
-        val newState = transform(_model.value)
+        val value = _model.value ?: return
+        val newState = transform(value)
         _model.onNext(newState)
     }
 
