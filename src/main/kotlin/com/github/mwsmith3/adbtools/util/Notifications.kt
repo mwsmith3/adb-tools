@@ -1,17 +1,17 @@
 package com.github.mwsmith3.adbtools.util
 
 import com.intellij.notification.NotificationGroup
+import com.intellij.notification.NotificationGroupManager
 import com.intellij.notification.NotificationType
 import com.intellij.openapi.project.Project
 
 object Notifications {
     private const val NOTIFICATION_TITLE = "ADB Tools"
-    private val INFO_GROUP = NotificationGroup.logOnlyGroup("ADB Logs")
-    private val ERROR_GROUP = NotificationGroup.balloonGroup("ADB Error")
-    val WARNING_GROUP = NotificationGroup.balloonGroup("ADB Warning")
+    private val LOG_GROUP = NotificationGroupManager.getInstance().getNotificationGroup("ADBTools Log")
+    val POPUP_GROUP: NotificationGroup = NotificationGroupManager.getInstance().getNotificationGroup("ADBTools Popup")
 
     fun info(message: String, project: Project? = null) {
-        return INFO_GROUP.createNotification(
+        return LOG_GROUP.createNotification(
             NOTIFICATION_TITLE,
             message,
             NotificationType.INFORMATION,
@@ -20,7 +20,7 @@ object Notifications {
     }
 
     fun error(message: String, project: Project? = null) {
-        return ERROR_GROUP.createNotification(
+        return POPUP_GROUP.createNotification(
             NOTIFICATION_TITLE,
             message,
             NotificationType.ERROR,

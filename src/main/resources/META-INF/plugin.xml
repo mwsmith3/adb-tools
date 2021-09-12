@@ -32,6 +32,9 @@
                 anchor="left"
                 secondary="true"
                 factoryClass="com.github.mwsmith3.adbtools.window.AdbToolsWindowFactory"/>
+
+        <notificationGroup displayType="BALLOON" id="ADBTools Popup"/>
+        <notificationGroup displayType="NONE" id="ADBTools Log"/>
     </extensions>
 
     <actions>

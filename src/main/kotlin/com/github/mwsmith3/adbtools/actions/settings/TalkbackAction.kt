@@ -34,7 +34,7 @@ class TalkbackAction : AdbAction() {
     }
 
     private fun showNotification(project: Project, device: IDevice) {
-        val notification = Notifications.WARNING_GROUP.createNotification(
+        val notification = Notifications.POPUP_GROUP.createNotification(
             "TalkBack not installed",
             "Do you want to install TalkBack?",
             NotificationType.WARNING
