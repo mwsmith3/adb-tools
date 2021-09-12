@@ -6,13 +6,14 @@ import com.github.mwsmith3.adbtools.device.DeviceProviderServiceFake
 import com.github.mwsmith3.adbtools.util.AndroidFacetProviderService
 import com.github.mwsmith3.adbtools.util.AndroidFacetProviderServiceFake
 import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase
+import io.mockk.every
+import io.mockk.mockk
 import io.reactivex.rxjava3.core.Observable
 import org.jetbrains.android.facet.AndroidFacet
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
-import org.mockito.Mockito
 
 @RunWith(JUnit4::class)
 class AdbToolsControllerTest : LightJavaCodeInsightFixtureTestCase() {
@@ -86,11 +87,11 @@ class AdbToolsControllerTest : LightJavaCodeInsightFixtureTestCase() {
     private fun createController() = AdbToolsController(project)
 
     private fun createMockIDevice(id: Int): IDevice {
-        val device: IDevice = Mockito.mock(IDevice::class.java)
-        Mockito.`when`(device.serialNumber).thenReturn("mock-serial-number-$id")
-        Mockito.`when`(device.isEmulator).thenReturn(false)
+        val device: IDevice = mockk()
+        every { device.serialNumber } returns "mock-serial-number-$id"
+        every { device.isEmulator } returns false
         return device
     }
 
-    private fun createMockAndroidFacet() = Mockito.mock(AndroidFacet::class.java)
+    private fun createMockAndroidFacet() = mockk<AndroidFacet>()
 }

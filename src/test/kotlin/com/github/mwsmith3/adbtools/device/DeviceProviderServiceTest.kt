@@ -5,19 +5,19 @@ import com.android.ddmlib.IDevice
 import com.google.common.util.concurrent.Futures
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase
+import io.mockk.every
+import io.mockk.mockk
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
-import org.mockito.Mockito
-import org.mockito.Mockito.`when`
 import java.lang.RuntimeException
 
 @RunWith(JUnit4::class)
 class DeviceProviderServiceTest : LightJavaCodeInsightFixtureTestCase() {
 
-    private val bridge: AndroidDebugBridge = Mockito.mock(AndroidDebugBridge::class.java)
-    private val device: IDevice = Mockito.mock(IDevice::class.java)
+    private val bridge = mockk<AndroidDebugBridge>()
+    private val device = mockk<IDevice>()
     private lateinit var bridgeProviderService: BridgeProviderServiceFake
     private lateinit var service: DeviceProviderServiceImpl
 
@@ -37,9 +37,9 @@ class DeviceProviderServiceTest : LightJavaCodeInsightFixtureTestCase() {
 
     @Test
     fun `when bridge future returns bridge with devices, then state is Success`() {
-        `when`(device.serialNumber).thenReturn("mock-serial-number")
-        `when`(device.isEmulator).thenReturn(false)
-        `when`(bridge.devices).thenReturn(Array(1) { device })
+        every { device.serialNumber } returns "mock-serial-number"
+        every { device.isEmulator } returns false
+        every { bridge.devices } returns Array(1) { device }
 
         bridgeProviderService.provider = { _ -> Futures.immediateFuture(bridge) }
         service = DeviceProviderServiceImpl(project)
