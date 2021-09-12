@@ -5,6 +5,9 @@
 ## [Unreleased]
 - N/A
 
+## [0.2.5]
+- Updated to work with Arctic Fox
+
 ## [0.2.4]
 - Removed until-build build range requirement
 - Removed no device image as it did not fit correctly in windowed mode
