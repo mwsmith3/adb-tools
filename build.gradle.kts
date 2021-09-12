@@ -78,6 +78,11 @@ detekt {
 }
 
 tasks {
+
+    buildSearchableOptions {
+        systemProperty("idea.is.internal", "")
+    }
+
     // Set the compatibility versions to 1.8
     withType<JavaCompile> {
         sourceCompatibility = "1.8"
